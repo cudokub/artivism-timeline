@@ -24,11 +24,10 @@ for it in culture_raw:
 
 IMG_DIR = '/Users/cudo/Desktop/Artivism/site/tl-img'
 import subprocess
-def img_w(path, hero):
+def img_ar(path):
     r = subprocess.run(['sips', '-g', 'pixelWidth', '-g', 'pixelHeight', path], capture_output=True, text=True)
     vals = [int(l.split(': ')[1]) for l in r.stdout.strip().split('\n')[1:]]
-    if hero: return max(90, min(380, round(235 * vals[0] / vals[1])))
-    return max(30, min(100, round(50 * vals[0] / vals[1])))
+    return round(vals[0] / vals[1], 3)
 fa = []
 for line in open('/Users/cudo/Desktop/Artivism/freearts-events.txt'):
     p = [x.strip() for x in line.split('|')]
@@ -38,7 +37,7 @@ for line in open('/Users/cudo/Desktop/Artivism/freearts-events.txt'):
         img = f'tl-img/{eid}.jpg' if os.path.exists(fp) else None
         hero = p[4] == 'tier:hero'
         fa.append({'date': p[0], 'name': p[2], 'hero': hero, 'img': img,
-                   'iw': img_w(fp, hero) if img else 80})
+                   'ar': img_ar(fp) if img else 1.6})
 
 def items(lst, kind):
     out = []
@@ -46,7 +45,7 @@ def items(lst, kind):
         out.append({'d': it['date'], 'n': it.get('short') or it['name'], 'full': it['name'],
                     'desc': (it.get('desc') or it.get('description') or '')[:260],
                     'crowd': it.get('crowd_estimate', ''),
-                    'hero': it.get('hero', False), 'img': it.get('img'), 'iw': it.get('iw', 96)})
+                    'hero': it.get('hero', False), 'img': it.get('img'), 'ar': it.get('ar', 1.6)})
     return out
 
 data = {'pol': items(politics, 'pol'), 'cul': items(culture, 'cul'), 'fa': items(fa, 'fa')}
@@ -96,13 +95,13 @@ h1 { font-size:clamp(16px,1.9vw,22px); font-weight:600; }
 .card .box { position:absolute; left:-2px; }
 .card img, .card .ph { display:block; border-radius:6px; object-fit:cover; border:1px solid rgba(232,69,44,.35);
   background:#1a1210; }
-.card img { height:50px; object-fit:cover; }
-.card.hero img { width:auto; height:235px; max-width:380px; object-fit:contain; border-width:2px; box-shadow:0 4px 22px rgba(232,69,44,.25); }
-.card .ph { width:80px; height:50px; display:flex; align-items:center; justify-content:center;
+.card img { object-fit:cover; }
+.card.hero img { object-fit:contain; border-width:2px; box-shadow:0 4px 22px rgba(232,69,44,.25); }
+.card .ph { width:100px; height:70px; display:flex; align-items:center; justify-content:center;
   color:rgba(232,69,44,.5); font-size:10px; }
 .card .cap { font-size:10.5px; color:var(--dim); line-height:1.35; width:100px; margin-top:4px;
   display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
-.card.hero .cap { font-size:15px; font-weight:700; color:#fff; width:auto; max-width:240px; }
+.card.hero .cap { font-size:15px; font-weight:700; color:#fff; width:auto; max-width:280px; margin-top:8px; }
 .card:hover img { border-color:var(--fa); }
 .card:hover .cap { color:var(--fg); }
 
@@ -115,7 +114,7 @@ h1 { font-size:clamp(16px,1.9vw,22px); font-weight:600; }
 </style></head><body>
 <header>
   <h1>Timeline Mockup v3 — 3 เส้นเรื่อง</h1>
-  <span class="sub">การเมือง 15% · FREE ARTS 75% (hero 50 : งานอื่น 50) · วัฒนธรรม 10%</span>
+  <span class="sub">การเมือง 15% · FREE ARTS 75% (บน: hero+กลาง · ล่าง: เล็ก 2 แถว) · วัฒนธรรม 10%</span>
   <div class="legend">
     <span><span class="k" style="background:var(--pol)"></span>การเมือง</span>
     <span><span class="k" style="background:var(--fa)"></span>Free Arts</span>
@@ -136,7 +135,8 @@ const DAY = 86400000;
 const POL = { top:40,  h:122 };            // 15% — เกาะเส้นแบ่งบน ชี้ขึ้น
 const FA  = { top:162, h:607 };            // 75% — เส้นแดง = เส้น Hero
 const CUL = { top:769, h:81 };             // 10% — เกาะเส้นแบ่งล่าง ชี้ลง
-const HERO_LINE = FA.top + 303;            // hero 50% / งานอื่น 50% ของโซน Free Arts
+const HERO_LINE = FA.top + 304;            // hero 50% : งานอื่น 50%
+const GAP = 12;                            // ช่องว่างมาตรฐานทุกจุด
 const MONTHS = [['2020-07-01','ก.ค. 63'],['2020-08-01','ส.ค.'],['2020-09-01','ก.ย.'],['2020-10-01','ต.ค.'],['2020-11-01','พ.ย.'],['2020-12-01','ธ.ค.'],['2021-01-01','']];
 let pxday = 12;
 const world = document.getElementById('world');
@@ -192,27 +192,111 @@ function faLane() {
   base.style.top = mid + 'px'; base.style.background = 'rgba(232,69,44,.25)'; world.appendChild(base);
   const arr = [...DATA.fa].sort((a, b) => a.d.localeCompare(b.d));
   // Hero = เหนือเส้นแถวเดียว / งานอื่น = ใต้เส้น 3 แถว
-  const ROW_OVERRIDE = { 'บ๊ายบายไดโนเสาร์ x นักเรียนเลว': 'B1', 'ม็อบ 22 พฤศจิกา ถนนอักษะ': 'B3' };  // จัดตามที่เอเลียร์เคาะ 3 ก.ค. 69
-  const tracks = { A1: -1e9, B1: -1e9, B2: -1e9, B3: -1e9 };
-  arr.forEach(it => {
+  // ═══ ภาษากลางของทีม: ขนาด = ใหญ่(hero)/กลาง/เล็ก/จิ๋ว · แถว = บน(A1)/ล่างหนึ่ง(B1)/ล่างสอง(B2) ═══
+  const ROW_OVERRIDE = { 'Graffiti #FREEART': 'B1', 'ป้ายแจก ม็อบสถานทูตเยอรมัน': 'A1' };            // บังคับแถวรายการ์ด: 'ชื่อการ์ด': 'A1'|'B1'|'B2'
+  const TEXT_ONLY = ['ม็อบ 22 พฤศจิกา ถนนอักษะ'];               // เลนข้อความล่างสุด — ไม่มีรูป กินที่น้อย
+  const SIZE_OVERRIDE = {                                         // ขนาดที่เอเลียร์เคาะ 4 ก.ค. 69
+    'Graffiti #FREEART': 'จิ๋ว',
+    'โยนไฟล์หมุดคณะราษฎรออนไลน์': 'จิ๋ว',
+    'เวทีศิลปะ ม็อบ 19 กันยา': 'กลาง',
+    'ฝันถึง 6 ตุลา ใครฆ่าประชาชน': 'จิ๋ว',
+    'เวทีศิลปะ ม็อบ 14 ตุลา': 'กลาง',
+    'ปริญญาประชาชน': 'จิ๋ว',
+    'ป้ายแจก ม็อบสถานทูตเยอรมัน': 'จิ๋ว',
+    'ภาพ Set ปล่อยเพื่อนเรา': 'กลาง',
+    'ผ้ายันต์ราษฎร': 'จิ๋ว',
+    'บ๊ายบายไดโนเสาร์ x นักเรียนเลว': 'เล็ก',
+    'ม็อบ 22 พฤศจิกา ถนนอักษะ': 'จิ๋ว',
+    'วาดพื้น แก้ได้ถ้าแก้รัฐธรรมนูญ': 'เล็ก',
+    'วาดพื้น รัฐประหารมึงเจอกู': 'กลาง',
+    '#Saveจะนะ x Alex Face': 'กลาง',
+  };
+  const TH_SIZE = { 'ใหญ่': 'hero', 'กลาง': 'medium', 'เล็ก': 'small', 'จิ๋ว': 'tiny' };
+  const SIZE = { hero: 185, medium: 130, small: 90, tiny: 70 };  // มาตรฐาน 4 ก.ค. 69 (50:50 + เลนข้อความ)
+  const PAD = { hero: 24, medium: 24, small: 24, tiny: 14 };
+  const wOf = (it, h) => Math.max(Math.min(Math.round(h * (it.ar || 1.6)), Math.round(h * 1.9)), 60);
+
+  // ความหนาแน่น: ใครมีเพื่อนบ้านใกล้กว่า 100px → โซนแน่น → ย่อลงหนึ่งขั้น
+  const DENSE_GAP = 100;
+  arr.forEach((it, i) => {
     const px = x(it.d);
-    const w = (it.hero ? Math.max(it.iw || 190, 140) : Math.max(it.iw || 80, 80) + 10) + 14;
-    let tk;
-    if (it.hero) tk = 'A1';
-    else if (ROW_OVERRIDE[it.n]) tk = ROW_OVERRIDE[it.n];
-    else {
-      tk = ['B1', 'B2', 'B3'].find(k => tracks[k] < px);
-      if (!tk) tk = ['B1', 'B2', 'B3'].reduce((a, b) => tracks[a] <= tracks[b] ? a : b); // ตกทุกแถว → เลือกแถวที่ว่างเร็วสุด (กันซ้อนตำแหน่งเดียวกัน)
+    const dPrev = i > 0 ? px - x(arr[i-1].d) : 1e9;
+    const dNext = i < arr.length - 1 ? x(arr[i+1].d) - px : 1e9;
+    it._dense = Math.min(dPrev, dNext) < DENSE_GAP;
+  });
+
+  const tracks = { A1: -1e9, B1: -1e9, B2: -1e9 };
+  const heroSpans = [];
+  arr.filter(it => it.hero).forEach(it => {
+    const px = x(it.d), w = Math.max(wOf(it, SIZE.hero), 84) + PAD.hero;
+    heroSpans.push([px - 24, px + w]);
+    it._tk = 'A1'; it._size = 'hero';
+  });
+  const hitsHero = (px, w) => heroSpans.some(([a, b]) => px < b && px + w > a);
+  const spanOf = (it, size) => Math.max(wOf(it, SIZE[size]), size === 'tiny' ? 66 : 84) + PAD[size];
+
+  const trackT = { end: -1e9 };
+  arr.filter(it => !it.hero && TEXT_ONLY.includes(it.n)).forEach(it => {
+    it._tk = 'T'; it._size = 'text';
+  });
+  const placedBelow = [];  // skyline: กล่องที่วางแล้ว {x0,x1,y0,y1}
+  const boxH = s => SIZE[s] + 32;
+  arr.filter(it => !it.hero && !TEXT_ONLY.includes(it.n)).forEach(it => {
+    const px = x(it.d);
+    const up = it._dense ? 'small' : 'medium';
+    const low = it._dense ? 'tiny' : 'small';
+    const forced = SIZE_OVERRIDE[it.n] ? (TH_SIZE[SIZE_OVERRIDE[it.n]] || SIZE_OVERRIDE[it.n]) : null;
+    let size, below = true;
+    if (ROW_OVERRIDE[it.n] === 'A1' && !hitsHero(px, spanOf(it, forced || up))) {
+      size = forced || up; below = false;
+    } else if (!ROW_OVERRIDE[it.n] && forced && tracks.A1 < px && !hitsHero(px, spanOf(it, forced))) {
+      size = forced; below = false;
+    } else if (!ROW_OVERRIDE[it.n] && !forced && tracks.A1 < px && !hitsHero(px, spanOf(it, up))) {
+      size = up; below = false;
+    } else {
+      size = forced || low;
     }
-    tracks[tk] = Math.max(tracks[tk], px + w); it._tk = tk;
+    if (!below) { it._tk = 'A1'; it._size = size; tracks.A1 = Math.max(tracks.A1, px + spanOf(it, size)); return; }
+    // skyline ล่างเส้น: ชิดเส้นที่สุด ชนแล้วหลบลง — ลึกเกินเพดาน (ก่อนเลนข้อความ) ให้ย่อไซส์แล้วลองใหม่
+    const LIMIT = 256;
+    const LADDER = ['medium', 'small', 'tiny'];
+    const place = s => {
+      const w = spanOf(it, s), h = boxH(s);
+      let y = GAP, moved = true;
+      while (moved) {
+        moved = false;
+        for (const r of placedBelow) {
+          if (px < r.x1 && px + w > r.x0 && y < r.y1 && y + h > r.y0) { y = r.y1 + GAP; moved = true; }
+        }
+      }
+      return { y, w, h };
+    };
+    let s = size, spot = place(s);
+    while (spot.y + spot.h > LIMIT && LADDER.indexOf(s) < LADDER.length - 1) {
+      s = LADDER[LADDER.indexOf(s) + 1];
+      spot = place(s);
+    }
+    if (spot.y + spot.h > LIMIT) spot.y = Math.max(GAP, LIMIT - spot.h);  // จิ๋วแล้วยังล้น → หนีบไว้ไม่ให้ทะลุเลนข้อความ
+    placedBelow.push({ x0: px, x1: px + spot.w, y0: spot.y, y1: spot.y + spot.h });
+    it._tk = 'B'; it._size = s; it._y = spot.y;
   });
   arr.forEach(it => {
     const card = document.createElement('div');
     card.className = 'card' + (it.hero ? ' hero' : '');
     card.style.left = x(it.d) + 'px'; card.style.top = mid + 'px';
-    const gap = { A1: 14, B1: 14, B2: 14 + 82 + 12, B3: 14 + (82 + 12) * 2 };
-    const above = it._tk.startsWith('A');
-    const off = gap[it._tk];
+    const above = it._tk === 'A1';
+    const off = it._tk === 'T' ? 268 : (it._tk === 'B' ? it._y : GAP);
+    if (it._tk === 'T') {  // เลนข้อความ: จุด + ชื่อ เท่านั้น
+      const tick = document.createElement('div'); tick.className = 'tick';
+      tick.style.top = '0'; tick.style.height = off + 'px'; tick.style.opacity = '.35';
+      const dotb = document.createElement('div'); dotb.className = 'dotb'; dotb.style.top = '-4.5px';
+      const txt = document.createElement('div');
+      txt.style.cssText = 'position:absolute; left:8px; top:' + (off - 7) + 'px; font-size:11px; color:rgba(242,240,235,.5); white-space:nowrap;';
+      txt.textContent = it.n;
+      card.appendChild(tick); card.appendChild(dotb); card.appendChild(txt);
+      hover(card, it); world.appendChild(card);
+      return;
+    }
     const tick = document.createElement('div'); tick.className = 'tick';
     if (above) { tick.style.top = -off + 'px'; tick.style.height = off + 'px'; }
     else { tick.style.top = '0'; tick.style.height = off + 'px'; }
@@ -222,11 +306,13 @@ function faLane() {
     if (above) box.style.bottom = off + 'px';  // ยึดขอบล่างการ์ดกับเส้นเชื่อม — สูงเท่าไหร่ก็ไม่หลุด/ไม่ชนเส้นบน
     else box.style.top = off + 'px';
     if (it.img) { const im = document.createElement('img'); im.src = it.img; im.loading = 'lazy';
-      if (!it.hero) im.style.width = (it.iw || 80) + 'px';
+      im.style.height = SIZE[it._size] + 'px';
+      if (!it.hero) im.style.width = wOf(it, SIZE[it._size]) + 'px'; else im.style.width = 'auto';
       box.appendChild(im); }
     else { const ph = document.createElement('div'); ph.className = 'ph'; ph.textContent = 'ไม่มีรูป'; box.appendChild(ph); }
     const cap = document.createElement('div'); cap.className = 'cap'; cap.textContent = it.n;
-    cap.style.width = it.hero ? Math.max(it.iw || 190, 140) + 'px' : Math.max(it.iw || 80, 80) + 'px';
+    cap.style.width = Math.max(wOf(it, SIZE[it._size]), it._size === 'tiny' ? 66 : 84) + 'px';
+    if (it._size === 'tiny') cap.style.fontSize = '9.5px';
     box.appendChild(cap);
     card.appendChild(tick); card.appendChild(dotb); card.appendChild(box);
     hover(card, it); world.appendChild(card);
