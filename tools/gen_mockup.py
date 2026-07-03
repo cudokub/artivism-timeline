@@ -22,12 +22,13 @@ for it in culture_raw:
     if d and d >= '2020-07-01':
         culture.append({'date': d, 'name': it['title'], 'short': it.get('short'), 'hero': it.get('hero', False), 'desc': it['story']})
 
-IMG_DIR = '/private/tmp/claude-501/-Users-cudo-free-arts/dbdcae88-da7d-422b-ae54-6d4c178656c2/scratchpad/artivism-pub/tl-img'
+IMG_DIR = '/Users/cudo/Desktop/Artivism/site/tl-img'
 import subprocess
-def img_w60(path):
+def img_w(path, hero):
     r = subprocess.run(['sips', '-g', 'pixelWidth', '-g', 'pixelHeight', path], capture_output=True, text=True)
     vals = [int(l.split(': ')[1]) for l in r.stdout.strip().split('\n')[1:]]
-    return max(34, min(120, round(60 * vals[0] / vals[1])))
+    if hero: return max(90, min(380, round(235 * vals[0] / vals[1])))
+    return max(30, min(100, round(50 * vals[0] / vals[1])))
 fa = []
 for line in open('/Users/cudo/Desktop/Artivism/freearts-events.txt'):
     p = [x.strip() for x in line.split('|')]
@@ -35,17 +36,17 @@ for line in open('/Users/cudo/Desktop/Artivism/freearts-events.txt'):
         eid = p[1]
         fp = f'{IMG_DIR}/{eid}.jpg'
         img = f'tl-img/{eid}.jpg' if os.path.exists(fp) else None
-        fa.append({'date': p[0], 'name': p[2], 'hero': p[4] == 'tier:hero', 'img': img,
-                   'iw': img_w60(fp) if img else 96})
+        hero = p[4] == 'tier:hero'
+        fa.append({'date': p[0], 'name': p[2], 'hero': hero, 'img': img,
+                   'iw': img_w(fp, hero) if img else 80})
 
 def items(lst, kind):
     out = []
     for it in lst:
-        crack = kind == 'pol' and any(k in it['name'] for k in ['สลาย', 'จับกุม', 'ฉุกเฉิน'])
         out.append({'d': it['date'], 'n': it.get('short') or it['name'], 'full': it['name'],
                     'desc': (it.get('desc') or it.get('description') or '')[:260],
                     'crowd': it.get('crowd_estimate', ''),
-                    'hero': it.get('hero', False), 'crack': crack, 'img': it.get('img'), 'iw': it.get('iw', 96)})
+                    'hero': it.get('hero', False), 'img': it.get('img'), 'iw': it.get('iw', 96)})
     return out
 
 data = {'pol': items(politics, 'pol'), 'cul': items(culture, 'cul'), 'fa': items(fa, 'fa')}
@@ -81,8 +82,6 @@ h1 { font-size:clamp(16px,1.9vw,22px); font-weight:600; }
 
 .ev { position:absolute; z-index:5; }
 .ev .dot { width:7px; height:7px; border-radius:50%; position:absolute; left:-3.5px; top:-3.5px; }
-.ev.crack .dot { width:0; height:0; border-radius:0; border-left:6px solid transparent; border-right:6px solid transparent;
-  border-top:9px solid #f2f0eb; left:-6px; top:-4px; }
 .ev .lbl { position:absolute; white-space:nowrap; font-size:11px; color:var(--dim); left:6px; top:-7px;
   max-width:200px; overflow:hidden; text-overflow:ellipsis; }
 .ev .tick { position:absolute; width:1px; background:rgba(242,240,235,.13); left:0; }
@@ -97,9 +96,9 @@ h1 { font-size:clamp(16px,1.9vw,22px); font-weight:600; }
 .card .box { position:absolute; left:-2px; }
 .card img, .card .ph { display:block; border-radius:6px; object-fit:cover; border:1px solid rgba(232,69,44,.35);
   background:#1a1210; }
-.card img { height:60px; object-fit:cover; }
-.card.hero img { width:auto; height:148px; max-width:280px; object-fit:contain; border-width:2px; box-shadow:0 4px 22px rgba(232,69,44,.25); }
-.card .ph { width:96px; height:60px; display:flex; align-items:center; justify-content:center;
+.card img { height:50px; object-fit:cover; }
+.card.hero img { width:auto; height:235px; max-width:380px; object-fit:contain; border-width:2px; box-shadow:0 4px 22px rgba(232,69,44,.25); }
+.card .ph { width:80px; height:50px; display:flex; align-items:center; justify-content:center;
   color:rgba(232,69,44,.5); font-size:10px; }
 .card .cap { font-size:10.5px; color:var(--dim); line-height:1.35; width:100px; margin-top:4px;
   display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
@@ -116,12 +115,11 @@ h1 { font-size:clamp(16px,1.9vw,22px); font-weight:600; }
 </style></head><body>
 <header>
   <h1>Timeline Mockup v3 — 3 เส้นเรื่อง</h1>
-  <span class="sub">การเมือง 15% · FREE ARTS 70% (บนเส้นแดง = HERO · ใต้เส้น = งานอื่นๆ) · วัฒนธรรม 15%</span>
+  <span class="sub">การเมือง 15% · FREE ARTS 75% (hero 50 : งานอื่น 50) · วัฒนธรรม 10%</span>
   <div class="legend">
     <span><span class="k" style="background:var(--pol)"></span>การเมือง</span>
     <span><span class="k" style="background:var(--fa)"></span>Free Arts</span>
     <span><span class="k" style="background:var(--cul)"></span>วัฒนธรรม</span>
-    <span>▼ = สลาย/จับกุม</span>
   </div>
 </header>
 <div class="zoom">ซูม:
@@ -136,9 +134,9 @@ const T0 = new Date('2020-06-26').getTime(), T1 = new Date('2021-01-06').getTime
 const DAY = 86400000;
 // lanes: pol 25% / fa 60% / cul 15% of 760 usable (top 40 for month labels)
 const POL = { top:40,  h:122 };            // 15% — เกาะเส้นแบ่งบน ชี้ขึ้น
-const FA  = { top:162, h:566 };            // 70% — เส้นแดง = เส้น Hero
-const CUL = { top:728, h:122 };            // 15% — เกาะเส้นแบ่งล่าง ชี้ลง
-const HERO_LINE = FA.top + 204;            // = 366 ตำแหน่งเดิมเป๊ะ — การ์ด Free Arts ไม่ขยับ
+const FA  = { top:162, h:607 };            // 75% — เส้นแดง = เส้น Hero
+const CUL = { top:769, h:81 };             // 10% — เกาะเส้นแบ่งล่าง ชี้ลง
+const HERO_LINE = FA.top + 303;            // hero 50% / งานอื่น 50% ของโซน Free Arts
 const MONTHS = [['2020-07-01','ก.ค. 63'],['2020-08-01','ส.ค.'],['2020-09-01','ก.ย.'],['2020-10-01','ต.ค.'],['2020-11-01','พ.ย.'],['2020-12-01','ธ.ค.'],['2021-01-01','']];
 let pxday = 12;
 const world = document.getElementById('world');
@@ -173,7 +171,7 @@ function dotLane(anchorY, key, color, dir) {
   });
   arr.forEach(it => {
     const ev = document.createElement('div');
-    ev.className = 'ev' + (it.crack ? ' crack' : '') + (it.hero ? ' big' : '');
+    ev.className = 'ev' + (it.hero ? ' big' : '');
     const off = 15 + it._row * 23;
     const yy = dir === 'up' ? anchorY - off : anchorY + off;
     ev.style.left = x(it.d) + 'px'; ev.style.top = yy + 'px';
@@ -181,7 +179,7 @@ function dotLane(anchorY, key, color, dir) {
     if (dir === 'up') { tick.style.top = '0'; tick.style.height = off + 'px'; }
     else { tick.style.top = -off + 'px'; tick.style.height = off + 'px'; }
     const dot = document.createElement('div'); dot.className = 'dot';
-    if (!it.crack) dot.style.background = color;
+    dot.style.background = color;
     const lbl = document.createElement('div'); lbl.className = 'lbl'; lbl.textContent = it.n;
     ev.appendChild(tick); ev.appendChild(dot); ev.appendChild(lbl);
     hover(ev, it); world.appendChild(ev);
@@ -197,7 +195,7 @@ function faLane() {
   const tracks = { A1: -1e9, B1: -1e9, B2: -1e9, B3: -1e9 };
   arr.forEach(it => {
     const px = x(it.d);
-    const w = (it.hero ? 190 : Math.max(it.iw || 96, 84) + 10) + 14;
+    const w = (it.hero ? Math.max(it.iw || 190, 140) : Math.max(it.iw || 80, 80) + 10) + 14;
     let tk;
     if (it.hero) tk = 'A1';
     else tk = ['B1', 'B2', 'B3'].find(k => tracks[k] < px) || 'B3';
@@ -207,7 +205,7 @@ function faLane() {
     const card = document.createElement('div');
     card.className = 'card' + (it.hero ? ' hero' : '');
     card.style.left = x(it.d) + 'px'; card.style.top = mid + 'px';
-    const gap = { A1: 14, B1: 14, B2: 14 + 94 + 14, B3: 14 + (94 + 14) * 2 };
+    const gap = { A1: 14, B1: 14, B2: 14 + 82 + 12, B3: 14 + (82 + 12) * 2 };
     const above = it._tk.startsWith('A');
     const off = gap[it._tk];
     const tick = document.createElement('div'); tick.className = 'tick';
@@ -219,11 +217,11 @@ function faLane() {
     if (above) box.style.bottom = off + 'px';  // ยึดขอบล่างการ์ดกับเส้นเชื่อม — สูงเท่าไหร่ก็ไม่หลุด/ไม่ชนเส้นบน
     else box.style.top = off + 'px';
     if (it.img) { const im = document.createElement('img'); im.src = it.img; im.loading = 'lazy';
-      if (!it.hero) im.style.width = (it.iw || 96) + 'px';
+      if (!it.hero) im.style.width = (it.iw || 80) + 'px';
       box.appendChild(im); }
     else { const ph = document.createElement('div'); ph.className = 'ph'; ph.textContent = 'ไม่มีรูป'; box.appendChild(ph); }
     const cap = document.createElement('div'); cap.className = 'cap'; cap.textContent = it.n;
-    if (!it.hero) cap.style.width = Math.max(it.iw || 96, 84) + 'px';
+    cap.style.width = it.hero ? Math.max(it.iw || 190, 140) + 'px' : Math.max(it.iw || 80, 80) + 'px';
     box.appendChild(cap);
     card.appendChild(tick); card.appendChild(dotb); card.appendChild(box);
     hover(card, it); world.appendChild(card);
@@ -264,5 +262,5 @@ addEventListener('mouseup', () => { drag = null; vp.classList.remove('drag'); })
 vp.addEventListener('wheel', e => { if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) { vp.scrollLeft += e.deltaY; e.preventDefault(); } }, { passive: false });
 </script></body></html>"""
 page = page.replace('__DATA__', json.dumps(data, ensure_ascii=False))
-open('/Users/cudo/Desktop/Artivism/timeline-mockup.html', 'w').write(page)
+open('/Users/cudo/Desktop/Artivism/site/mockup.html', 'w').write(page)
 print(f"v2: pol {len(data['pol'])} | cul {len(data['cul'])} | fa {len(data['fa'])} (with img: {sum(1 for f in data['fa'] if f['img'])})")

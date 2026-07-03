@@ -286,5 +286,5 @@ parts.append("""
 </div></body></html>""")
 
 out = '\n'.join(parts)
-open('/Users/cudo/Desktop/Artivism/research-timeline.html','w').write(out)
+open('/Users/cudo/Desktop/Artivism/site/index.html','w').write(out)
 print('written', len(out), 'chars')
