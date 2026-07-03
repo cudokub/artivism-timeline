@@ -107,7 +107,7 @@ h1 { font-size:clamp(16px,1.9vw,22px); font-weight:600; }
 </style></head><body>
 <header>
   <h1>Timeline Mockup v3 — 3 เส้นเรื่อง</h1>
-  <span class="sub">การเมือง 20% · FREE ARTS 60% (บนเส้นแดง = HERO · ใต้เส้น = งานอื่นๆ) · วัฒนธรรม 20%</span>
+  <span class="sub">การเมือง 15% · FREE ARTS 70% (บนเส้นแดง = HERO · ใต้เส้น = งานอื่นๆ) · วัฒนธรรม 15%</span>
   <div class="legend">
     <span><span class="k" style="background:var(--pol)"></span>การเมือง</span>
     <span><span class="k" style="background:var(--fa)"></span>Free Arts</span>
@@ -126,10 +126,10 @@ const DATA = __DATA__;
 const T0 = new Date('2020-06-26').getTime(), T1 = new Date('2021-01-06').getTime();
 const DAY = 86400000;
 // lanes: pol 25% / fa 60% / cul 15% of 760 usable (top 40 for month labels)
-const POL = { top:40,  h:158 };            // 20% — เกาะเส้นแบ่งบน ชี้ขึ้น
-const FA  = { top:198, h:494 };            // 60% — เส้นแดง = เส้น Hero
-const CUL = { top:692, h:158 };            // 20% — เกาะเส้นแบ่งล่าง ชี้ลง
-const HERO_LINE = FA.top + 168;            // บนเส้น = Hero เท่านั้น / ใต้เส้น = งานอื่นๆ
+const POL = { top:40,  h:122 };            // 15% — เกาะเส้นแบ่งบน ชี้ขึ้น
+const FA  = { top:162, h:566 };            // 70% — เส้นแดง = เส้น Hero
+const CUL = { top:728, h:122 };            // 15% — เกาะเส้นแบ่งล่าง ชี้ลง
+const HERO_LINE = FA.top + 204;            // = 366 ตำแหน่งเดิมเป๊ะ — การ์ด Free Arts ไม่ขยับ
 const MONTHS = [['2020-07-01','ก.ค. 63'],['2020-08-01','ส.ค.'],['2020-09-01','ก.ย.'],['2020-10-01','ต.ค.'],['2020-11-01','พ.ย.'],['2020-12-01','ธ.ค.'],['2021-01-01','']];
 let pxday = 12;
 const world = document.getElementById('world');
