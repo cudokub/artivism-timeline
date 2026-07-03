@@ -64,7 +64,7 @@ h1 { font-size:clamp(16px,1.9vw,22px); font-weight:600; }
 .zoom button.on { color:var(--fg); border-color:var(--dim); }
 #viewport { overflow-x:auto; overflow-y:hidden; cursor:grab; border-top:1px solid var(--line); }
 #viewport.drag { cursor:grabbing; }
-#world { position:relative; height:800px; }
+#world { position:relative; height:830px; }
 .mgrid { position:absolute; top:0; bottom:0; border-left:1px solid rgba(242,240,235,.07); }
 .mlabel { position:absolute; top:6px; font-size:12px; color:var(--dim); padding-left:8px; letter-spacing:.08em; }
 .lane-sep { position:absolute; left:0; right:0; height:1px; background:rgba(242,240,235,.06); }
@@ -127,8 +127,8 @@ const T0 = new Date('2020-06-26').getTime(), T1 = new Date('2021-01-06').getTime
 const DAY = 86400000;
 // lanes: pol 25% / fa 60% / cul 15% of 760 usable (top 40 for month labels)
 const POL = { top:40,  h:190 };
-const FA  = { top:230, h:456 };
-const CUL = { top:686, h:114 };
+const FA  = { top:230, h:460 };
+const CUL = { top:700, h:130 };
 const MONTHS = [['2020-07-01','ก.ค. 63'],['2020-08-01','ส.ค.'],['2020-09-01','ก.ย.'],['2020-10-01','ต.ค.'],['2020-11-01','พ.ย.'],['2020-12-01','ธ.ค.'],['2021-01-01','']];
 let pxday = 12;
 const world = document.getElementById('world');
@@ -200,7 +200,7 @@ function faLane() {
     card.className = 'card' + (it.hero ? ' hero' : '');
     card.style.left = x(it.d) + 'px'; card.style.top = mid + 'px';
     const imgH = it.hero ? 112 : 60, capH = it.hero ? 42 : 34, boxH = imgH + capH;
-    const gap = { A1: 14, A2: 14 + 154 + 16, B1: 14, B2: 14 + 154 + 16 }; // แถวสองเผื่อความสูง hero เสมอ
+    const gap = { A1: 14, A2: 14 + 154 + 16, B1: 14, B2: 14 + 94 + 14 }; // บน:เผื่อ hero / ล่าง:การ์ดปกติ (hero ไม่ลงล่าง)
     const above = it._tk.startsWith('A');
     const off = gap[it._tk];
     const boxTop = above ? -(off + boxH) : off;
