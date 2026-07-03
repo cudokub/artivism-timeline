@@ -20,7 +20,7 @@ for it in culture_raw:
         for kw, dd in CULT_DATES.items():
             if kw in it['title']: d = dd; break
     if d and d >= '2020-07-01':
-        culture.append({'date': d, 'name': it['title'], 'desc': it['story']})
+        culture.append({'date': d, 'name': it['title'], 'short': it.get('short'), 'desc': it['story']})
 
 IMG_DIR = '/private/tmp/claude-501/-Users-cudo-free-arts/dbdcae88-da7d-422b-ae54-6d4c178656c2/scratchpad/artivism-pub/tl-img'
 fa = []
@@ -35,7 +35,7 @@ def items(lst, kind):
     out = []
     for it in lst:
         crack = kind == 'pol' and any(k in it['name'] for k in ['สลาย', 'จับกุม', 'ฉุกเฉิน'])
-        out.append({'d': it['date'], 'n': it['name'],
+        out.append({'d': it['date'], 'n': it.get('short') or it['name'], 'full': it['name'],
                     'desc': (it.get('desc') or it.get('description') or '')[:260],
                     'crowd': it.get('crowd_estimate', ''),
                     'hero': it.get('hero', False), 'crack': crack, 'img': it.get('img')})
@@ -143,7 +143,7 @@ function thd(dstr) { const d = new Date(dstr);
 function hover(el, it) {
   el.addEventListener('mousemove', e => {
     tip.style.display = 'block';
-    tip.innerHTML = '<b>' + it.n + '</b><span class="dt">' + thd(it.d) + '</span>' +
+    tip.innerHTML = '<b>' + (it.full || it.n) + '</b><span class="dt">' + thd(it.d) + '</span>' +
       (it.desc ? '<div>' + it.desc + '…</div>' : '') +
       (it.crowd ? '<div class="crowd">👥 ' + it.crowd + '</div>' : '');
     tip.style.left = Math.min(e.clientX + 16, innerWidth - 360) + 'px';
