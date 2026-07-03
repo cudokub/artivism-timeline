@@ -192,14 +192,19 @@ function faLane() {
   base.style.top = mid + 'px'; base.style.background = 'rgba(232,69,44,.25)'; world.appendChild(base);
   const arr = [...DATA.fa].sort((a, b) => a.d.localeCompare(b.d));
   // Hero = เหนือเส้นแถวเดียว / งานอื่น = ใต้เส้น 3 แถว
+  const ROW_OVERRIDE = {};  // บังคับแถวรายการ์ด เช่น { 'ชื่อการ์ด': 'B1' }
   const tracks = { A1: -1e9, B1: -1e9, B2: -1e9, B3: -1e9 };
   arr.forEach(it => {
     const px = x(it.d);
     const w = (it.hero ? Math.max(it.iw || 190, 140) : Math.max(it.iw || 80, 80) + 10) + 14;
     let tk;
     if (it.hero) tk = 'A1';
-    else tk = ['B1', 'B2', 'B3'].find(k => tracks[k] < px) || 'B3';
-    tracks[tk] = px + w; it._tk = tk;
+    else if (ROW_OVERRIDE[it.n]) tk = ROW_OVERRIDE[it.n];
+    else {
+      tk = ['B1', 'B2', 'B3'].find(k => tracks[k] < px);
+      if (!tk) tk = ['B1', 'B2', 'B3'].reduce((a, b) => tracks[a] <= tracks[b] ? a : b); // ตกทุกแถว → เลือกแถวที่ว่างเร็วสุด (กันซ้อนตำแหน่งเดียวกัน)
+    }
+    tracks[tk] = Math.max(tracks[tk], px + w); it._tk = tk;
   });
   arr.forEach(it => {
     const card = document.createElement('div');
