@@ -200,7 +200,7 @@ function faLane() {
     card.className = 'card' + (it.hero ? ' hero' : '');
     card.style.left = x(it.d) + 'px'; card.style.top = mid + 'px';
     const imgH = it.hero ? 112 : 60, capH = it.hero ? 42 : 34, boxH = imgH + capH;
-    const gap = { A1: 14, A2: 14 + boxH + 18, B1: 14, B2: 14 + boxH + 18 };
+    const gap = { A1: 14, A2: 14 + 154 + 16, B1: 14, B2: 14 + 154 + 16 }; // แถวสองเผื่อความสูง hero เสมอ
     const above = it._tk.startsWith('A');
     const off = gap[it._tk];
     const boxTop = above ? -(off + boxH) : off;
