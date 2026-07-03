@@ -192,7 +192,7 @@ function faLane() {
   base.style.top = mid + 'px'; base.style.background = 'rgba(232,69,44,.25)'; world.appendChild(base);
   const arr = [...DATA.fa].sort((a, b) => a.d.localeCompare(b.d));
   // Hero = เหนือเส้นแถวเดียว / งานอื่น = ใต้เส้น 3 แถว
-  const ROW_OVERRIDE = {};  // บังคับแถวรายการ์ด เช่น { 'ชื่อการ์ด': 'B1' }
+  const ROW_OVERRIDE = { 'บ๊ายบายไดโนเสาร์ x นักเรียนเลว': 'B1', 'ม็อบ 22 พฤศจิกา ถนนอักษะ': 'B3' };  // จัดตามที่เอเลียร์เคาะ 3 ก.ค. 69
   const tracks = { A1: -1e9, B1: -1e9, B2: -1e9, B3: -1e9 };
   arr.forEach(it => {
     const px = x(it.d);
