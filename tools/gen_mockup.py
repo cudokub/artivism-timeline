@@ -23,13 +23,20 @@ for it in culture_raw:
         culture.append({'date': d, 'name': it['title'], 'short': it.get('short'), 'desc': it['story']})
 
 IMG_DIR = '/private/tmp/claude-501/-Users-cudo-free-arts/dbdcae88-da7d-422b-ae54-6d4c178656c2/scratchpad/artivism-pub/tl-img'
+import subprocess
+def img_w60(path):
+    r = subprocess.run(['sips', '-g', 'pixelWidth', '-g', 'pixelHeight', path], capture_output=True, text=True)
+    vals = [int(l.split(': ')[1]) for l in r.stdout.strip().split('\n')[1:]]
+    return max(34, min(120, round(60 * vals[0] / vals[1])))
 fa = []
 for line in open('/Users/cudo/Desktop/Artivism/freearts-events.txt'):
     p = [x.strip() for x in line.split('|')]
     if '2020-07-01' <= p[0] <= '2020-12-31':
         eid = p[1]
-        img = f'tl-img/{eid}.jpg' if os.path.exists(f'{IMG_DIR}/{eid}.jpg') else None
-        fa.append({'date': p[0], 'name': p[2], 'hero': p[4] == 'tier:hero', 'img': img})
+        fp = f'{IMG_DIR}/{eid}.jpg'
+        img = f'tl-img/{eid}.jpg' if os.path.exists(fp) else None
+        fa.append({'date': p[0], 'name': p[2], 'hero': p[4] == 'tier:hero', 'img': img,
+                   'iw': img_w60(fp) if img else 96})
 
 def items(lst, kind):
     out = []
@@ -38,7 +45,7 @@ def items(lst, kind):
         out.append({'d': it['date'], 'n': it.get('short') or it['name'], 'full': it['name'],
                     'desc': (it.get('desc') or it.get('description') or '')[:260],
                     'crowd': it.get('crowd_estimate', ''),
-                    'hero': it.get('hero', False), 'crack': crack, 'img': it.get('img')})
+                    'hero': it.get('hero', False), 'crack': crack, 'img': it.get('img'), 'iw': it.get('iw', 96)})
     return out
 
 data = {'pol': items(politics, 'pol'), 'cul': items(culture, 'cul'), 'fa': items(fa, 'fa')}
@@ -88,7 +95,7 @@ h1 { font-size:clamp(16px,1.9vw,22px); font-weight:600; }
 .card .box { position:absolute; left:-2px; }
 .card img, .card .ph { display:block; border-radius:6px; object-fit:cover; border:1px solid rgba(232,69,44,.35);
   background:#1a1210; }
-.card img { width:96px; height:60px; }
+.card img { height:60px; object-fit:cover; }
 .card.hero img { width:auto; height:148px; max-width:280px; object-fit:contain; border-width:2px; box-shadow:0 4px 22px rgba(232,69,44,.25); }
 .card .ph { width:96px; height:60px; display:flex; align-items:center; justify-content:center;
   color:rgba(232,69,44,.5); font-size:10px; }
@@ -188,7 +195,7 @@ function faLane() {
   const tracks = { A1: -1e9, B1: -1e9, B2: -1e9, B3: -1e9 };
   arr.forEach(it => {
     const px = x(it.d);
-    const w = (it.hero ? 190 : 106) + 14;
+    const w = (it.hero ? 190 : Math.max(it.iw || 96, 84) + 10) + 14;
     let tk;
     if (it.hero) tk = 'A1';
     else tk = ['B1', 'B2', 'B3'].find(k => tracks[k] < px) || 'B3';
@@ -209,9 +216,13 @@ function faLane() {
     const box = document.createElement('div'); box.className = 'box';
     if (above) box.style.bottom = off + 'px';  // ยึดขอบล่างการ์ดกับเส้นเชื่อม — สูงเท่าไหร่ก็ไม่หลุด/ไม่ชนเส้นบน
     else box.style.top = off + 'px';
-    if (it.img) { const im = document.createElement('img'); im.src = it.img; im.loading = 'lazy'; box.appendChild(im); }
+    if (it.img) { const im = document.createElement('img'); im.src = it.img; im.loading = 'lazy';
+      if (!it.hero) im.style.width = (it.iw || 96) + 'px';
+      box.appendChild(im); }
     else { const ph = document.createElement('div'); ph.className = 'ph'; ph.textContent = 'ไม่มีรูป'; box.appendChild(ph); }
-    const cap = document.createElement('div'); cap.className = 'cap'; cap.textContent = it.n; box.appendChild(cap);
+    const cap = document.createElement('div'); cap.className = 'cap'; cap.textContent = it.n;
+    if (!it.hero) cap.style.width = Math.max(it.iw || 96, 84) + 'px';
+    box.appendChild(cap);
     card.appendChild(tick); card.appendChild(dotb); card.appendChild(box);
     hover(card, it); world.appendChild(card);
   });
