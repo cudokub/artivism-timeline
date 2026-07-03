@@ -20,7 +20,7 @@ for it in culture_raw:
         for kw, dd in CULT_DATES.items():
             if kw in it['title']: d = dd; break
     if d and d >= '2020-07-01':
-        culture.append({'date': d, 'name': it['title'], 'short': it.get('short'), 'desc': it['story']})
+        culture.append({'date': d, 'name': it['title'], 'short': it.get('short'), 'hero': it.get('hero', False), 'desc': it['story']})
 
 IMG_DIR = '/private/tmp/claude-501/-Users-cudo-free-arts/dbdcae88-da7d-422b-ae54-6d4c178656c2/scratchpad/artivism-pub/tl-img'
 import subprocess
@@ -87,6 +87,8 @@ h1 { font-size:clamp(16px,1.9vw,22px); font-weight:600; }
   max-width:200px; overflow:hidden; text-overflow:ellipsis; }
 .ev .tick { position:absolute; width:1px; background:rgba(242,240,235,.13); left:0; }
 .ev:hover .lbl { color:var(--fg); z-index:40; }
+.ev.big .dot { width:11px; height:11px; left:-5.5px; top:-5.5px; }
+.ev.big .lbl { font-size:13.5px; font-weight:600; color:rgba(242,240,235,.92); top:-9px; max-width:240px; }
 
 .card { position:absolute; z-index:6; }
 .card .tick { position:absolute; width:1px; background:rgba(232,69,44,.3); left:0; }
@@ -101,7 +103,7 @@ h1 { font-size:clamp(16px,1.9vw,22px); font-weight:600; }
   color:rgba(232,69,44,.5); font-size:10px; }
 .card .cap { font-size:10.5px; color:var(--dim); line-height:1.35; width:100px; margin-top:4px;
   display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
-.card.hero .cap { font-size:12.5px; font-weight:600; color:var(--fg); width:auto; max-width:220px; }
+.card.hero .cap { font-size:15px; font-weight:700; color:#fff; width:auto; max-width:240px; }
 .card:hover img { border-color:var(--fa); }
 .card:hover .cap { color:var(--fg); }
 
@@ -165,13 +167,13 @@ function dotLane(anchorY, key, color, dir) {
   const arr = [...DATA[key]].sort((a, b) => a.d.localeCompare(b.d));
   const rows = [];
   arr.forEach(it => {
-    const px = x(it.d), w = Math.min(it.n.length * 6, 205) + 14;
+    const px = x(it.d), w = Math.min(it.n.length * (it.hero ? 7.6 : 6), 240) + 14;
     let r = 0; while (rows[r] !== undefined && rows[r] > px) r++;
     rows[r] = px + w; it._row = r;
   });
   arr.forEach(it => {
     const ev = document.createElement('div');
-    ev.className = 'ev' + (it.crack ? ' crack' : '');
+    ev.className = 'ev' + (it.crack ? ' crack' : '') + (it.hero ? ' big' : '');
     const off = 15 + it._row * 23;
     const yy = dir === 'up' ? anchorY - off : anchorY + off;
     ev.style.left = x(it.d) + 'px'; ev.style.top = yy + 'px';
