@@ -126,9 +126,9 @@ const DATA = __DATA__;
 const T0 = new Date('2020-06-26').getTime(), T1 = new Date('2021-01-06').getTime();
 const DAY = 86400000;
 // lanes: pol 25% / fa 60% / cul 15% of 760 usable (top 40 for month labels)
-const POL = { top:40,  h:190 };
-const FA  = { top:230, h:460 };
-const CUL = { top:700, h:130 };
+const POL = { top:40,  h:158 };            // 20% — เกาะเส้นแบ่งบน ชี้ขึ้น
+const FA  = { top:198, h:474 };            // 60% — เส้นแดงกลาง
+const CUL = { top:672, h:158 };            // 20% — เกาะเส้นแบ่งล่าง ชี้ลง
 const MONTHS = [['2020-07-01','ก.ค. 63'],['2020-08-01','ส.ค.'],['2020-09-01','ก.ย.'],['2020-10-01','ต.ค.'],['2020-11-01','พ.ย.'],['2020-12-01','ธ.ค.'],['2021-01-01','']];
 let pxday = 12;
 const world = document.getElementById('world');
@@ -152,9 +152,8 @@ function hover(el, it) {
   el.addEventListener('mouseleave', () => { tip.style.display = 'none'; guide.style.display = 'none'; });
 }
 
-function dotLane(L, key, color) {
-  const mid = L.top + L.h / 2;
-  const base = document.createElement('div'); base.className = 'base'; base.style.top = mid + 'px'; world.appendChild(base);
+function dotLane(anchorY, key, color, dir) {
+  // dir 'up': จุดเรียงเหนือเส้น anchor เท่านั้น / 'down': ใต้เส้นเท่านั้น — ไม่ล้ำเขตเลนอื่น
   const arr = [...DATA[key]].sort((a, b) => a.d.localeCompare(b.d));
   const rows = [];
   arr.forEach(it => {
@@ -162,16 +161,15 @@ function dotLane(L, key, color) {
     let r = 0; while (rows[r] !== undefined && rows[r] > px) r++;
     rows[r] = px + w; it._row = r;
   });
-  const step = key === 'cul' ? 20 : 25;
   arr.forEach(it => {
     const ev = document.createElement('div');
     ev.className = 'ev' + (it.crack ? ' crack' : '');
-    const up = it._row % 2 === 0;
-    const off = Math.floor(it._row / 2 + (up ? 0 : 1)) * step + 13;
-    const yy = up ? mid - off : mid + off;
+    const off = 15 + it._row * 23;
+    const yy = dir === 'up' ? anchorY - off : anchorY + off;
     ev.style.left = x(it.d) + 'px'; ev.style.top = yy + 'px';
     const tick = document.createElement('div'); tick.className = 'tick';
-    tick.style.top = up ? '0' : (mid - yy) + 'px'; tick.style.height = Math.abs(mid - yy) + 'px';
+    if (dir === 'up') { tick.style.top = '0'; tick.style.height = off + 'px'; }
+    else { tick.style.top = -off + 'px'; tick.style.height = off + 'px'; }
     const dot = document.createElement('div'); dot.className = 'dot';
     if (!it.crack) dot.style.background = color;
     const lbl = document.createElement('div'); lbl.className = 'lbl'; lbl.textContent = it.n;
@@ -226,12 +224,13 @@ function render() {
     const g = document.createElement('div'); g.className = 'mgrid'; g.style.left = x(d) + 'px'; world.appendChild(g);
     if (l) { const t = document.createElement('div'); t.className = 'mlabel'; t.style.left = x(d) + 'px'; t.textContent = l; world.appendChild(t); }
   });
-  [POL.top + POL.h, FA.top + FA.h].forEach(y => {
-    const s = document.createElement('div'); s.className = 'lane-sep'; s.style.top = y + 'px'; world.appendChild(s);
+  [FA.top, FA.top + FA.h].forEach(y => {
+    const s = document.createElement('div'); s.className = 'lane-sep'; s.style.top = y + 'px';
+    s.style.background = 'rgba(242,240,235,.14)'; world.appendChild(s);
   });
-  dotLane(POL, 'pol', 'var(--pol)');
+  dotLane(FA.top, 'pol', 'var(--pol)', 'up');
   faLane();
-  dotLane(CUL, 'cul', 'var(--cul)');
+  dotLane(FA.top + FA.h, 'cul', 'var(--cul)', 'down');
 }
 render();
 
