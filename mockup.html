@@ -44,12 +44,12 @@ h1 { font-size:clamp(16px,1.9vw,22px); font-weight:600; }
 .card img, .card .ph { display:block; border-radius:6px; object-fit:cover; border:1px solid rgba(232,69,44,.35);
   background:#1a1210; }
 .card img { width:96px; height:60px; }
-.card.hero img { width:180px; height:112px; border-width:2px; box-shadow:0 4px 22px rgba(232,69,44,.25); }
+.card.hero img { width:auto; height:148px; max-width:280px; object-fit:contain; border-width:2px; box-shadow:0 4px 22px rgba(232,69,44,.25); }
 .card .ph { width:96px; height:60px; display:flex; align-items:center; justify-content:center;
   color:rgba(232,69,44,.5); font-size:10px; }
 .card .cap { font-size:10.5px; color:var(--dim); line-height:1.35; width:100px; margin-top:4px;
   display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
-.card.hero .cap { font-size:12.5px; font-weight:600; color:var(--fg); width:184px; }
+.card.hero .cap { font-size:12.5px; font-weight:600; color:var(--fg); width:auto; max-width:220px; }
 .card:hover img { border-color:var(--fa); }
 .card:hover .cap { color:var(--fg); }
 
