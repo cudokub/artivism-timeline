@@ -198,18 +198,17 @@ function faLane() {
     const card = document.createElement('div');
     card.className = 'card' + (it.hero ? ' hero' : '');
     card.style.left = x(it.d) + 'px'; card.style.top = mid + 'px';
-    const imgH = it.hero ? 112 : 60, capH = it.hero ? 42 : 34, boxH = imgH + capH;
     const gap = { A1: 14, B1: 14, B2: 14 + 94 + 14, B3: 14 + (94 + 14) * 2 };
     const above = it._tk.startsWith('A');
     const off = gap[it._tk];
-    const boxTop = above ? -(off + boxH) : off;
     const tick = document.createElement('div'); tick.className = 'tick';
-    tick.style.top = above ? boxTop + boxH + 'px' : '0';
-    tick.style.height = off + 'px';
-    if (above) { tick.style.top = boxTop + boxH + 'px'; tick.style.height = (0 - (boxTop + boxH)) + 'px'; }
+    if (above) { tick.style.top = -off + 'px'; tick.style.height = off + 'px'; }
+    else { tick.style.top = '0'; tick.style.height = off + 'px'; }
     const dotb = document.createElement('div'); dotb.className = 'dotb';
     dotb.style.top = it.hero ? '-7px' : '-4.5px';
-    const box = document.createElement('div'); box.className = 'box'; box.style.top = boxTop + 'px';
+    const box = document.createElement('div'); box.className = 'box';
+    if (above) box.style.bottom = off + 'px';  // ยึดขอบล่างการ์ดกับเส้นเชื่อม — สูงเท่าไหร่ก็ไม่หลุด/ไม่ชนเส้นบน
+    else box.style.top = off + 'px';
     if (it.img) { const im = document.createElement('img'); im.src = it.img; im.loading = 'lazy'; box.appendChild(im); }
     else { const ph = document.createElement('div'); ph.className = 'ph'; ph.textContent = 'ไม่มีรูป'; box.appendChild(ph); }
     const cap = document.createElement('div'); cap.className = 'cap'; cap.textContent = it.n; box.appendChild(cap);
