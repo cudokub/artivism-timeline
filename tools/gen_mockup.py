@@ -42,7 +42,7 @@ for line in open('/Users/cudo/Desktop/Artivism/freearts-events.txt'):
 def items(lst, kind):
     out = []
     for it in lst:
-        out.append({'d': it['date'], 'n': it.get('short') or it['name'], 'full': it['name'],
+        out.append({'d': it['date'], 'n': it.get('short') or it['name'], 'm': it.get('mid'), 'full': it['name'],
                     'desc': (it.get('desc') or it.get('description') or '')[:260],
                     'crowd': it.get('crowd_estimate', ''),
                     'hero': it.get('hero', False), 'img': it.get('img'), 'ar': it.get('ar', 1.6)})
@@ -81,12 +81,11 @@ h1 { font-size:clamp(16px,1.9vw,22px); font-weight:600; }
 
 .ev { position:absolute; z-index:5; }
 .ev .dot { width:7px; height:7px; border-radius:50%; position:absolute; left:-3.5px; top:-3.5px; }
-.ev .lbl { position:absolute; white-space:nowrap; font-size:11px; color:var(--dim); left:6px; top:-7px;
-  max-width:200px; overflow:hidden; text-overflow:ellipsis; }
+.ev .lbl { position:absolute; white-space:nowrap; font-size:11px; color:var(--dim); left:6px; top:-7px; }
 .ev .tick { position:absolute; width:1px; background:rgba(242,240,235,.13); left:0; }
 .ev:hover .lbl { color:var(--fg); z-index:40; }
 .ev.big .dot { width:11px; height:11px; left:-5.5px; top:-5.5px; }
-.ev.big .lbl { font-size:13.5px; font-weight:600; color:rgba(242,240,235,.92); top:-9px; max-width:240px; }
+.ev.big .lbl { font-size:13.5px; font-weight:600; color:rgba(242,240,235,.92); top:-9px; }
 
 .card { position:absolute; z-index:6; }
 .card .tick { position:absolute; width:1px; background:rgba(232,69,44,.3); left:0; }
@@ -160,15 +159,37 @@ function hover(el, it) {
   el.addEventListener('mouseleave', () => { tip.style.display = 'none'; guide.style.display = 'none'; });
 }
 
+const lblCtx = document.createElement('canvas').getContext('2d');
+function lblW(t, hero) {
+  lblCtx.font = (hero ? '600 13.5px ' : '11px ') + "'Sukhumvit Set','Noto Sans Thai',sans-serif";
+  return lblCtx.measureText(t).width;
+}
+
 function dotLane(anchorY, key, color, dir) {
   // dir 'up': จุดเรียงเหนือเส้น anchor เท่านั้น / 'down': ใต้เส้นเท่านั้น — ไม่ล้ำเขตเลนอื่น
   const arr = [...DATA[key]].sort((a, b) => a.d.localeCompare(b.d));
-  const rows = [];
-  arr.forEach(it => {
-    const px = x(it.d), w = Math.min(it.n.length * (it.hero ? 7.6 : 6), 240) + 14;
-    let r = 0; while (rows[r] !== undefined && rows[r] > px) r++;
-    rows[r] = px + w; it._row = r;
-  });
+  const MAXROW = dir === 'up' ? 4 : 2;   // ความจุเลน: off = 15 + row*23 ต้องไม่ทะลุเขต
+  // ชื่อสองระดับ: ลองชื่อกลาง (m) ก่อนทุกอัน — ถ้ากองลึกเกินเลน ถอยชื่อกลางแถวคลัสเตอร์นั้นเป็นชื่อสั้น (n) ทีละอัน
+  const useMid = new Map(arr.map(it => [it, !!it.m]));
+  const pack = () => {
+    const rows = []; let deepest = 0;
+    arr.forEach(it => {
+      const t = useMid.get(it) ? it.m : it.n;
+      const px = x(it.d), w = lblW(t, it.hero) + 18;
+      let r = 0; while (rows[r] !== undefined && rows[r] > px) r++;
+      rows[r] = px + w; it._row = r; it._lbl = t;
+      deepest = Math.max(deepest, r);
+    });
+    return deepest;
+  };
+  for (let guard = 0; guard < arr.length && pack() > MAXROW; guard++) {
+    const overX = arr.filter(it => it._row > MAXROW).map(it => x(it.d));
+    const cand = arr.filter(it => useMid.get(it) && overX.some(ox => Math.abs(x(it.d) - ox) < 400))
+      .sort((a, b) => (lblW(b.m, b.hero) - lblW(b.n, b.hero)) - (lblW(a.m, a.hero) - lblW(a.n, a.hero)))[0]
+      || arr.find(it => useMid.get(it));
+    if (!cand) break;
+    useMid.set(cand, false);
+  }
   arr.forEach(it => {
     const ev = document.createElement('div');
     ev.className = 'ev' + (it.hero ? ' big' : '');
@@ -180,7 +201,7 @@ function dotLane(anchorY, key, color, dir) {
     else { tick.style.top = -off + 'px'; tick.style.height = off + 'px'; }
     const dot = document.createElement('div'); dot.className = 'dot';
     dot.style.background = color;
-    const lbl = document.createElement('div'); lbl.className = 'lbl'; lbl.textContent = it.n;
+    const lbl = document.createElement('div'); lbl.className = 'lbl'; lbl.textContent = it._lbl || it.n;
     ev.appendChild(tick); ev.appendChild(dot); ev.appendChild(lbl);
     hover(ev, it); world.appendChild(ev);
   });
