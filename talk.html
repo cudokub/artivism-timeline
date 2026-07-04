@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>โครงทอล์ค v2 — เล่าบนไทม์ไลน์ · ศิลปะปลดแอก × ARTIVISM 2026</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0a0a0a; --card: #161614; --fg: #f2f0eb; --dim: rgba(242,240,235,.55);
+    --faint: rgba(242,240,235,.35); --accent: #e8452c; --ok: #7fb069; --warn: #e8b34c;
+    --border: rgba(242,240,235,.12);
+    --p1: #e8452c; --p2: #6088d8; --p3: #a878dc; --p4: #58be78; --p5: #a5a5af; --p6: #e8b34c;
+  }
+  body { background: var(--bg); color: var(--fg);
+    font-family: 'Sukhumvit Set', 'Noto Sans Thai', 'Helvetica Neue', sans-serif;
+    padding: 40px 5vw 90px; max-width: 1180px; margin: 0 auto; }
+
+  header { display: flex; align-items: baseline; gap: 1.2rem; flex-wrap: wrap; }
+  h1 { font-size: clamp(22px, 2.4vw, 32px); font-weight: 700; }
+  .sub { color: var(--dim); font-size: clamp(13px, 1.2vw, 15px); }
+  .legend { color: var(--faint); font-size: 13px; margin: 10px 0 6px; line-height: 1.8; }
+  .legend b { color: var(--ok); font-weight: 600; }
+  .legend i { color: var(--warn); font-style: normal; font-weight: 600; }
+  .legend a { color: var(--dim); }
+
+  /* แถบภาพรวมการไหลของทอล์ค */
+  .flow { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 22px 0 34px; }
+  .flow span { font-size: 12.5px; border: 1px solid var(--border); border-radius: 999px;
+    padding: 5px 13px; color: var(--dim); white-space: nowrap; }
+  .flow span.deep { border-color: var(--accent); color: var(--fg); }
+  .flow span.mid { border-color: rgba(232,69,44,.4); color: var(--fg); }
+  .flow span.beat { border-style: dashed; color: var(--warn); border-color: var(--warn); }
+  .flow em { color: var(--faint); font-style: normal; font-size: 12px; }
+
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+    padding: 18px 22px 16px; margin-bottom: 16px; position: relative; overflow: hidden; }
+  .card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+    background: var(--pc, var(--border)); }
+  .card.hang { border-style: dashed; background: transparent; }
+  .card.bridge { background: transparent; padding-top: 12px; padding-bottom: 11px; }
+
+  .row1 { display: flex; align-items: baseline; gap: .8rem; flex-wrap: wrap; margin-bottom: 8px; }
+  .num { font-size: 12px; letter-spacing: .12em; color: var(--faint); }
+  h2 { font-size: clamp(17px, 1.7vw, 22px); font-weight: 700; }
+  .range { color: var(--dim); font-size: 13.5px; }
+  .row1 .grow { flex: 1; }
+  .chip { font-size: 11.5px; border-radius: 999px; padding: 3px 11px; white-space: nowrap; }
+  .chip.deep { background: rgba(232,69,44,.15); color: #f0917d; border: 1px solid rgba(232,69,44,.5); }
+  .chip.middeep { color: #f0917d; border: 1px solid rgba(232,69,44,.35); }
+  .chip.fly { border: 1px solid var(--border); color: var(--dim); }
+  .chip.mins { border: 1px solid var(--border); color: var(--faint); }
+  .chip.ok { border: 1px solid var(--ok); color: var(--ok); }
+  .chip.ask { border: 1px solid var(--warn); color: var(--warn); }
+
+  .line { font-size: 14px; line-height: 1.75; color: var(--dim); margin: 3px 0; }
+  .line b { color: var(--fg); font-weight: 600; }
+  .line .k { color: var(--faint); font-size: 12.5px; letter-spacing: .06em; margin-right: 6px; }
+  .ctx { margin-top: 9px; background: rgba(242,240,235,.045); border-radius: 8px;
+    padding: 9px 13px; font-size: 13.5px; color: var(--dim); line-height: 1.75; }
+  .ctx .k2 { color: var(--warn); font-size: 11px; letter-spacing: .12em; margin-right: 8px; }
+  .ctx b { color: var(--fg); font-weight: 600; }
+  .notes { margin-top: 10px; border-top: 1px dashed var(--border); padding-top: 9px; }
+  .notes div { font-size: 13.5px; color: var(--dim); line-height: 1.7; padding-left: 16px; position: relative; }
+  .notes div::before { content: '—'; position: absolute; left: 0; color: var(--faint); }
+
+  .timing { margin-top: 34px; border-top: 1px solid var(--border); padding-top: 16px;
+    color: var(--dim); font-size: 13.5px; line-height: 2; }
+  .timing b { color: var(--fg); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>โครงทอล์ค v2 — เล่าบนไทม์ไลน์</h1>
+  <span class="sub">ศิลปะปลดแอก × ARTIVISM 2026 ห้องเรียน 4 · 90 นาที (รวม Q&amp;A)</span>
+</header>
+<div class="legend">
+  วิธีเล่า: ไล่ไทม์ไลน์ 3 เส้นเรื่องจากซ้ายไปขวา — <b>เจาะลึก</b> หยุดลงรายละเอียดเต็มที่ · <b>เจาะสั้น</b> เล่างานชัดๆ แต่ไม่แช่นาน · <i>ไถเร็ว</i> โชว์ภาพบนไทม์ไลน์แล้วเล่าปากเปล่า<br>
+  จอหลักคือ <a href="https://cudokub.github.io/artivism-timeline/mockup.html" target="_blank">ไทม์ไลน์ mockup</a> · สถานะ: <span class="chip ok">นิ่ง</span> เคาะแล้ว · <span class="chip ask">คุยกับเอ๋</span> ยังต้องเวิร์คด้วยกัน
+</div>
+
+<div class="flow">
+  <span class="beat">เปิด</span><em>→</em>
+  <span class="deep">1 กำเนิด</span><em>→</em>
+  <span class="mid">2 ที่นี่มีคนตาย</span><em>→</em>
+  <span>3 ฝ่าล็อกดาวน์</span><em>→</em>
+  <span class="mid">4 ปักหมุดความทรงจำ</span><em>→</em>
+  <span class="mid">5 ฉลองวันชาติ → แล้วเราหยุด</span><em>→</em>
+  <span class="mid">6 กลับมาที่คูหา · #พร้อม</span><em>→</em>
+  <span>คั่น · การเมืองเข้าสภา</span><em>→</em>
+  <span class="deep">7 ส่งไม้ต่อ</span><em>→</em>
+  <span class="beat">ปิด + Q&amp;A</span>
+</div>
+
+<!-- ═══════════ เปิด ═══════════ -->
+<div class="card hang">
+  <div class="row1"><span class="num">เปิด</span><h2>ข้อเสนอ: เปิดที่ฉากจบ แล้วสอนอ่านแผนที่</h2><span class="grow"></span><span class="chip mins">~8 นาที</span><span class="chip ask">คุยกับเอ๋</span></div>
+  <div class="line"><span class="k">ร่าง</span>เปิดจอที่ <b>Voter Concert</b> (งานล่าสุด — 3 วันก่อนคูหา) แล้วพูดประโยคเดียว: "นี่คืองานล่าสุดของเรา... แต่เรื่องมันเริ่มเมื่อ 5 ปีก่อน หน้าหอศิลป์" → <b>ลากไทม์ไลน์ rewind กลับไป ก.ย. 63</b></div>
+  <div class="line"><span class="k">แล้ว</span>แนะนำตัว/กลุ่มสั้นๆ + สอนวิธีอ่านแผนที่: 3 เลน (การเมือง / เรา / วัฒนธรรม) · แถบสี 6 ช่วง · การ์ดใหญ่ = งานใหญ่ — "เดี๋ยวเราจะเดินทางด้วยกันจากซ้ายไปขวา"</div>
+</div>
+
+<!-- ═══════════ S1 ═══════════ -->
+<div class="card" style="--pc: var(--p1)">
+  <div class="row1"><span class="num">SECTION 1</span><h2>กำเนิด — ปีที่ทุกอย่างระเบิด</h2><span class="range">ก.ย. – ธ.ค. 63</span><span class="grow"></span><span class="chip deep">เจาะลึก</span><span class="chip mins">~10 นาที</span><span class="chip ok">นิ่ง</span></div>
+  <div class="line"><span class="k">เจาะ</span><b>Act สิ Art</b> (งานแรกหน้า BACC — วันที่กลุ่มกลายเป็นกลุ่มจริงๆ) และ <b>Mob Fest</b> (คลุมอนุสาวรีย์ + เจอขบวนเสด็จ)</div>
+  <div class="line"><span class="k">ไถผ่าน</span>เวทีศิลปะ ม็อบ 19 กันยา / 14 ตุลา · ปริญญาประชาชน · ผ้ายันต์ราษฎร · ป้ายแจกม็อบสถานทูตเยอรมัน · วาดพื้นราชประสงค์-ลาดพร้าว · #Saveจะนะ x Alex Face</div>
+  <div class="line"><span class="k">การเมืองรอบตัว</span>เยาวชนปลดแอก → ธรรมศาสตร์จะไม่ทน → 19 กันยา → 14 ตุลา → ประยุทธ์ประกาศใช้กฎหมายทุกมาตรา (112 กลับมา)</div>
+  <div class="ctx"><span class="k2">CONTEXT</span>ช่วงพีคที่สุดของขบวน — ฮึกเหิม สดใหม่ กล้า "ทะลุเพดาน" พูดเรื่องที่ไม่เคยพูดได้ ผสมอารมณ์ขันป๊อปคัลเจอร์ · ข้อเรียกร้อง 3 ข้อ (ยุบสภา หยุดคุกคาม รธน.ใหม่) + 10 ข้อปฏิรูปสถาบันฯ · รัฐตอบด้วยฉุกเฉินร้ายแรง-ฉีดน้ำปทุมวัน แต่ยิ่งปราบขบวนยิ่งโต — จนปลายปีรัฐเปลี่ยนอาวุธเป็น <b>ม.112 ระลอกใหญ่</b> โทนเริ่มตึงและมืดลง ความหวังปนเหนื่อยล้า</div>
+  <div class="notes">
+    <div>เล่าโทน "ขบวนสนุก งานมาไม่หยุด" — การ์ดที่อัดแน่นบนไทม์ไลน์ช่วงนี้คือหลักฐานด้วยตัวเอง</div>
+    <div>ย้ำจุดเกิด: ศิลปินที่ไม่รู้จักกันมาก่อน กลายเป็นคณะทำงานในสามเดือน</div>
+  </div>
+</div>
+
+<!-- ═══════════ S2 ═══════════ -->
+<div class="card" style="--pc: var(--p2)">
+  <div class="row1"><span class="num">SECTION 2</span><h2>ราคาแรก — เมื่อเพื่อนเราเข้าคุก</h2><span class="range">ก.พ. – พ.ค. 64</span><span class="grow"></span><span class="chip middeep">เจาะสั้น</span><span class="chip mins">~8 นาที</span><span class="chip ok">นิ่ง</span></div>
+  <div class="line"><span class="k">เจาะสั้น 3 งาน</span><b>แค่ขยับเท่ากับปฏิรูป</b> → <b>ที่นี่มีคนตาย</b> → <b>#SavePenguin</b></div>
+  <div class="line"><span class="k">ไถผ่าน</span>สกรีนเสื้อ #NO112 · เดิน/หมู่บ้านทะลุฟ้า · #Saveบางกลอย · อดอาหารประท้วง กราฟิกรายวัน · ม็อบ24มีนา Stencil · ราษฎรชนะมาร์เก็ต · ต้นไม้หน้าศาล · ทลายแม็พ 112</div>
+  <div class="line"><span class="k">การเมืองรอบตัว</span>ศาลไม่ให้ประกัน 4 แกนนำ → เพนกวินอดอาหาร → สลายหมู่บ้านทะลุฟ้า → โควิดระลอก 3 (ทองหล่อ)</div>
+  <div class="ctx"><span class="k2">CONTEXT</span>ยุคแกนนำถูกขัง — <b>"ปล่อยเพื่อนเรา"</b> กลายเป็นข้อเรียกร้องแกนกลางแทน 3 ข้อเดิม · ความรุนแรงยกระดับ: กระสุนยางถูกใช้ครั้งแรกที่ ม็อบ 28 กุมภา · ขบวนสลับสองโหมด: โกรธ-ดื้อดึง (REDEM ไร้แกนนำ) กับอดทนเชิงสัญลักษณ์ (อดอาหาร, ยืนหยุดขัง, เดินทะลุฟ้า 247.5 กม.) · เม.ย.เป็นต้นไปโควิดระลอกสามกดม็อบใหญ่หายไป การเคลื่อนไหวหดเหลือรูปแบบความเสี่ยงต่ำ</div>
+</div>
+
+<!-- ═══════════ S3 ═══════════ -->
+<div class="card" style="--pc: var(--p2)">
+  <div class="row1"><span class="num">SECTION 3</span><h2>ฝ่าล็อกดาวน์</h2><span class="range">พ.ค. – ก.ย. 64</span><span class="grow"></span><span class="chip fly">ไถเร็ว</span><span class="chip mins">~5 นาที</span><span class="chip ok">นิ่ง</span></div>
+  <div class="line"><span class="k">โชว์บนไทม์ไลน์</span>ราษฎรยืนยันดันเพดาน (24 มิถุนา) · ม็อบ18กรกฎา — เผาหุ่นประยุทธ์ · เมียนมาร์ X BIPAM (NFT ระดมทุนให้ขบวนพม่า)</div>
+  <div class="line"><span class="k">การเมืองรอบตัว</span>ล็อกดาวน์เดลตา-เคอร์ฟิว → ม็อบ 18 กรกฎาฝ่าโควิด → คาร์ม็อบ → สมรภูมิดินแดง</div>
+  <div class="ctx"><span class="k2">CONTEXT</span>เดลตาระบาดหนัก คนตายรายวัน ("ศพข้างถนน") — ความโกรธเรื่องวัคซีน-เศรษฐกิจดันคนกลับมาถนนกลางล็อกดาวน์ (18 กรกฎา, คาร์ม็อบทั่วประเทศ) · ส.ค.เกิด<b>สมรภูมิดินแดง</b> — เยาวชนทะลุแก๊สปะทะ คฝ. รายคืน ตำรวจระดม 38 กองร้อย วาฤทธิ์ 15 ปีถูกยิงหน้า สน. — ขบวนแตกเป็นสองสาย: สัญลักษณ์ กับ เผชิญหน้า</div>
+  <div class="notes"><div>ประเด็นเดียวพอ: โควิดปิดถนน แต่ปิดงานไม่ได้ — งานย้ายรูปแบบ (ออนไลน์ / สัญลักษณ์ / ข้ามพรมแดน)</div></div>
+</div>
+
+<!-- ═══════════ S4 ═══════════ -->
+<div class="card" style="--pc: var(--p3)">
+  <div class="row1"><span class="num">SECTION 4</span><h2>ปักหมุดความทรงจำ</h2><span class="range">ต.ค. 64 – มี.ค. 65</span><span class="grow"></span><span class="chip middeep">เจาะสั้น</span><span class="chip mins">~6 นาที</span><span class="chip ok">นิ่ง</span></div>
+  <div class="line"><span class="k">เจาะสั้น</span><b>ประติมานุสรณ์ 6 ตุลา</b> (45 ปี — ทุกใบหน้ามีชีวิต) และ <b>วันเด็ก × พรบ.การศึกษา x นักเรียนเลว</b></div>
+  <div class="line"><span class="k">ไถผ่าน</span>สหภาพคนทำงาน</div>
+  <div class="line"><span class="k">การเมืองรอบตัว</span>คำวินิจฉัย "ล้มล้างการปกครอง" → คว่ำร่าง รธน. ประชาชน → ทะลุวังทำโพลขบวนเสด็จ</div>
+  <div class="ctx"><span class="k2">CONTEXT</span>จุดปิดเพดานทางกฎหมาย — ศาล รธน. ชี้ข้อเรียกร้องปฏิรูป = <b>"ล้มล้างการปกครอง"</b> (10 พ.ย. 64) ตามด้วยรัฐสภาคว่ำร่าง รธน. ที่ประชาชน 1.5 แสนคนเข้าชื่อ · ยุคม็อบใหญ่จบลง ขบวนย้ายสนามเข้าศาล-เรือนจำ-ความทรงจำ · ต้นปี 65 คนรุ่นใหม่กว่าเปิดแนวใหม่เอง: ทะลุวังทำโพลขบวนเสด็จ — คำถามที่แหลมขึ้นในที่สาธารณะ</div>
+</div>
+
+<!-- ═══════════ S5 ═══════════ -->
+<div class="card" style="--pc: var(--p3)">
+  <div class="row1"><span class="num">SECTION 5</span><h2>แผ่วแต่ไม่ดับ — แล้วเราหยุดพัก</h2><span class="range">พ.ค. 65 – ม.ค. 66</span><span class="grow"></span><span class="chip middeep">เจาะสั้น</span><span class="chip mins">~8 นาที</span><span class="chip ok">นิ่ง</span></div>
+  <div class="line"><span class="k">เจาะ</span><b>ฉลองวันชาติ คณะราษฎรยังไม่ตาย (นะ)</b> — งานหลักของ section</div>
+  <div class="line"><span class="k">ไถผ่าน</span>โหวตอภิปรายไม่ไว้วางใจ โดยประชาชนจ้าาาา · แคมป์ฟังสภา · 6 ตุลา หวังว่าเสียงลมจะพาล่องไป</div>
+  <div class="line"><span class="k">การเมืองรอบตัว</span>บุ้ง-ใบปอ อดอาหาร · ชัชชาติชนะถล่มทลาย · เอเปคเลือด</div>
+  <div class="ctx"><span class="k2">CONTEXT</span>ปีที่ถนนเงียบ — นิติสงครามได้ผล: คดีสะสมเกือบ 1,900 คน แกนนำติดกำไล EM หรือถูกขัง (อย่างน้อย 47 คนระหว่างปี) · การต่อสู้ย้ายไปอยู่ที่<b>ร่างกายของปัจเจก</b> (ตะวันอดอาหาร 28 วัน, บุ้ง-ใบปอ 64 วัน) · กลางปีชัชชาติชนะถล่มทลาย — สัญญาณแรกว่าการเปลี่ยนแปลงอาจมาทางคูหา · ปิดปีด้วยเอเปคเลือด ตอกย้ำว่ารัฐไม่เปลี่ยน</div>
+  <div class="notes">
+    <div>บนจอ: หลังพูดประโยค "เราหยุด" ให้ลากผ่านโซนพับเวลา ม.ค.–มิ.ย. 66 เงียบๆ — เลนว่างเปล่าพูดแทนโดยไม่ต้องอธิบาย</div>
+  </div>
+</div>
+
+<!-- ═══════════ S6 ═══════════ -->
+<div class="card" style="--pc: var(--p4)">
+  <div class="row1"><span class="num">SECTION 6</span><h2>กลับมาที่คูหา — ความหวังถูกหัก</h2><span class="range">ก.ค. 66 – ก.พ. 67</span><span class="grow"></span><span class="chip middeep">เจาะ #พร้อม</span><span class="chip mins">~7 นาที</span><span class="chip ok">นิ่ง</span></div>
+  <div class="line"><span class="k">เจาะ</span><b>#พร้อม — ค และ #พร้อม — ห</b></div>
+  <div class="line"><span class="k">ไถผ่าน</span>Respect My Vote · Con For All · นิรโทษกรรมประชาชนสองงาน (แคมเปญล่ารายชื่อ → 11.2 Love Fair)</div>
+  <div class="line"><span class="k">การเมืองรอบตัว</span>ก้าวไกลชนะเลือกตั้ง → สว. สกัดพิธา → ทักษิณกลับ+เศรษฐาเป็นนายกฯ วันเดียวกัน</div>
+  <div class="ctx"><span class="k2">CONTEXT</span>ปีแห่ง "ความหวังผ่านคูหา" — ครึ่งปีแรกถนนเงียบเพราะพลังทั้งขบวนโยกไปที่การเลือกตั้ง (เม.ย. เหลือชุมนุม 33 ครั้งทั้งเดือน) · ก้าวไกลชนะอันดับ 1 = ความหวังพุ่งสูงสุดในรอบหลายปี → <b>สว. สกัดพิธา + รัฐบาลข้ามขั้ว</b> = ความโกรธและผิดหวังครั้งใหญ่ ก.ค.–ส.ค. (คนกลับมาถนนชั่วคราว — นั่นคือ #พร้อม) · จบปีแกนนำทยอยถูกพิพากษา อานนท์เข้าเรือนจำคดีแรก</div>
+  <div class="notes"><div>จุดเปลี่ยนของกลุ่ม: กลับมาพร้อมบทเรียน — งานยุคนี้ทำงานกับ "กติกา" (โหวต/รัฐธรรมนูญ/นิรโทษกรรม) ไม่ใช่ถนนอย่างเดียว</div></div>
+</div>
+
+<!-- ═══════════ คั่น ═══════════ -->
+<div class="card bridge" style="--pc: var(--p5)">
+  <div class="row1"><span class="num">คั่นสั้น</span><h2>การเมืองกลับเข้าสภา</h2><span class="range">มี.ค. 67 – พ.ค. 68</span><span class="grow"></span><span class="chip mins">~1 นาที</span><span class="chip ok">นิ่ง</span></div>
+  <div class="line">ไม่มีดราม่า — ได้เลือกตั้งแล้ว การเมืองย้ายเข้าสภา ประชาชนเคลื่อนไหวน้อยลง ความสนใจลด เราเลยไม่ได้เคลื่อนต่อ · ไถโซนพับเวลาผ่าน โดยเอ่ยถึง <b>บุ้งเสียชีวิต</b> และ <b>ยุบก้าวไกล</b> ในฐานะบริบท ไม่ใช่ section</div>
+</div>
+
+<!-- ═══════════ S7 ═══════════ -->
+<div class="card" style="--pc: var(--p6)">
+  <div class="row1"><span class="num">SECTION 7</span><h2>ส่งไม้ต่อ</h2><span class="range">มิ.ย. 68 – ก.พ. 69</span><span class="grow"></span><span class="chip deep">เจาะลึก</span><span class="chip mins">~8 นาที</span><span class="chip ok">นิ่ง</span></div>
+  <div class="line"><span class="k">เจาะ</span><b>Voter Concert (5 ก.พ. 69)</b></div>
+  <div class="line"><span class="k">ไถผ่าน</span>ขบวน Tune &amp; Co. — 24 มิถุนา วันประชาชน → 10 สิงหา ความฝันประชาชน → Run2Free → ตุลาที่คิดถึง → รณรงค์ประชามติ 8 กุมภา</div>
+  <div class="line"><span class="k">การเมืองรอบตัว</span>ยุบสภา → เลือกตั้ง + ประชามติ 8 ก.พ. 69 · วัฒนธรรมร่วมขบวน: ปากุมแภด · มีมธงเขียว · 12 Angry Men</div>
+  <div class="ctx"><span class="k2">CONTEXT</span>ปีที่ "ถนนเปลี่ยนมือ" — ม็อบใหญ่กลายเป็นของฝั่งอนุรักษนิยม (รวมพลังแผ่นดิน) วิกฤตชนชั้นนำรัวๆ: ปลดแพทองธาร ทักษิณเข้าคุก สงครามชายแดนปลุกชาตินิยม · ขบวนประชาธิปไตยย้ายไปสู้ในกลไกสภา-คูหาเต็มตัว · ยุบสภา ธ.ค. → ทุกพลังวิ่งเข้า <b>8 ก.พ. — ความหวังใหญ่ที่สุดในรอบหลายปี</b> แต่มีเงาที่ควรเอ่ย: นิรโทษกรรมที่ผ่านสภาไม่รวม 112 และสิ้นปี 68 ยังมีผู้ต้องขังการเมืองอย่างน้อย 56 คน</div>
+</div>
+
+<!-- ═══════════ ปิด ═══════════ -->
+<div class="card hang">
+  <div class="row1"><span class="num">ปิด</span><h2>ข้อเสนอ: ซูมออกทั้งเส้น → การ์ดใบต่อไปยังว่าง</h2><span class="grow"></span><span class="chip mins">~5 นาที + Q&amp;A ~20</span><span class="chip ask">คุยกับเอ๋</span></div>
+  <div class="line"><span class="k">ร่าง</span><b>ซูมเอาท์ให้เห็นทั้ง 5 ปีครึ่งในจอเดียว</b> — "นี่คือสิ่งที่กลุ่มศิลปินกลุ่มหนึ่งทำได้ ระหว่างที่ประเทศเป็นแบบนี้" → ค่อยถามห้อง: <b>"แล้วมันคือ Artivism ไหม?"</b> — ไม่ต้องตอบเอง ให้คนฟังตอบหลังเห็นทั้งเส้น</div>
+  <div class="line"><span class="k">จบ</span>เลื่อนไปขวาสุดของไทม์ไลน์ — พื้นที่หลัง ก.พ. 69 ที่ยังว่าง: <b>"การ์ดใบต่อไปยังไม่มีใครวาด"</b> → ชวนจินตนาการ (ธีมห้องเรียน The Imagination) → เปิด Q&amp;A</div>
+</div>
+
+<div class="timing">
+  <b>งบเวลา:</b> เปิด 8 · S1 10 · S2 8 · S3 5 · S4 6 · S5 8 · S6 7 · คั่น 1 · S7 8 · ปิด 5 = <b>~66 นาที</b> + Q&amp;A ~20 = <b>~86 นาที</b> ✓ (เหลือ buffer ~4 นาที)<br>
+  <b>ยังแขวน:</b> บทเปิด-ปิดฉบับเต็ม (ร่างข้างบนรอเคาะกับเอ๋) · fact check ชื่อคน-ตัวเลขทั้งหมดตอนโครงนิ่ง
+</div>
+
+</body>
+</html>
