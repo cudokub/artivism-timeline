@@ -3,8 +3,9 @@ from __future__ import annotations
 import json, html, os
 
 research = json.load(open('/Users/cudo/Desktop/Artivism/research-data.json'))
-politics = (research['result']['results'][0]['key_events'] + research['result']['results'][1]['key_events']
-            + research['result']['results'][2]['key_events'] + research['result']['results'][3]['key_events'])
+_res = research['result']['results']
+politics = (_res[0]['key_events'] + _res[1]['key_events'] + _res[2]['key_events'] + _res[3]['key_events']
+            + _res[4]['key_events'] + _res[5]['key_events'])
 
 culture_raw = json.load(open('/Users/cudo/Desktop/Artivism/culture-curated.json'))['items']
 CULT_DATES = {
@@ -15,7 +16,7 @@ CULT_DATES = {
 }
 culture = []
 for it in culture_raw:
-    if it['period_tag'] not in ('1-2563', '2-2564', '3-2565', '4-2566'): continue
+    if it['period_tag'] not in ('1-2563', '2-2564', '3-2565', '4-2566', '5-2567', '5-2567-กลาง68', '6-มิย68-กพ69'): continue
     d = it.get('date_exact') if it.get('date_exact') and it.get('date_exact') != 'unknown' else None
     if not d:
         for kw, dd in CULT_DATES.items():
@@ -32,7 +33,7 @@ def img_ar(path):
 fa = []
 for line in open('/Users/cudo/Desktop/Artivism/freearts-events.txt'):
     p = [x.strip() for x in line.split('|')]
-    if '2020-07-01' <= p[0] <= '2023-12-31':
+    if '2020-07-01' <= p[0] <= '2026-02-28':
         eid = p[1]
         fp = f'{IMG_DIR}/{eid}.jpg'
         img = f'tl-img/{eid}.jpg' if os.path.exists(fp) else None
@@ -129,7 +130,7 @@ h1 { font-size:clamp(16px,1.9vw,22px); font-weight:600; }
 <div id="tip"></div>
 <script>
 const DATA = __DATA__;
-const T0 = new Date('2020-06-26').getTime(), T1 = new Date('2024-01-06').getTime();
+const T0 = new Date('2020-06-26').getTime(), T1 = new Date('2026-03-08').getTime();
 const DAY = 86400000;
 // lanes: pol 25% / fa 60% / cul 15% of 760 usable (top 40 for month labels)
 const POL = { top:40,  h:122 };            // 15%
@@ -142,8 +143,13 @@ const MONTHS = [['2020-07-01','ก.ค. 63'],['2020-08-01','ส.ค.'],['2020-09
   ['2021-07-01','ก.ค.'],['2021-08-01','ส.ค.'],['2021-09-01','ก.ย.'],['2021-10-01','ต.ค.'],['2021-11-01','พ.ย.'],['2021-12-01','ธ.ค.'],
   ['2022-01-01','ม.ค. 65'],['2022-02-01','ก.พ.'],['2022-03-01','มี.ค.'],['2022-04-01','เม.ย.'],['2022-05-01','พ.ค.'],['2022-06-01','มิ.ย.'],
   ['2022-07-01','ก.ค.'],['2022-08-01','ส.ค.'],['2022-09-01','ก.ย.'],['2022-10-01','ต.ค.'],['2022-11-01','พ.ย.'],['2022-12-01','ธ.ค.'],
-  ['2023-01-01','ม.ค. 66'],['2023-02-01','ก.พ.'],['2023-03-01','มี.ค.'],['2023-04-01','เม.ย.'],['2023-05-01','พ.ค.'],['2023-06-01','มิ.ย.'],
-  ['2023-07-01','ก.ค.'],['2023-08-01','ส.ค.'],['2023-09-01','ก.ย.'],['2023-10-01','ต.ค.'],['2023-11-01','พ.ย.'],['2023-12-01','ธ.ค.'],['2024-01-01','']];
+  ['2023-01-01','ม.ค. 66'],['2023-04-01','เม.ย.'],  // โซนพับเวลา — รายไตรมาส
+  ['2023-07-01','ก.ค. 66'],['2023-08-01','ส.ค.'],['2023-09-01','ก.ย.'],['2023-10-01','ต.ค.'],['2023-11-01','พ.ย.'],['2023-12-01','ธ.ค.'],
+  ['2024-01-01','ม.ค. 67'],['2024-02-01','ก.พ.'],['2024-03-01','มี.ค.'],
+  ['2024-04-01','เม.ย. 67'],['2024-07-01','ก.ค.'],['2024-10-01','ต.ค.'],['2025-01-01','ม.ค. 68'],['2025-04-01','เม.ย.'],  // โซนพับเวลา — รายไตรมาส
+  ['2025-06-01','มิ.ย. 68'],
+  ['2025-07-01','ก.ค.'],['2025-08-01','ส.ค.'],['2025-09-01','ก.ย.'],['2025-10-01','ต.ค.'],['2025-11-01','พ.ย.'],['2025-12-01','ธ.ค.'],
+  ['2026-01-01','ม.ค. 69'],['2026-02-01','ก.พ.'],['2026-03-01','']];
 
 // ═══ ช่วงของเรื่อง — bg สีจางแบ่งยุค ═══
 const PBANDS = [
@@ -151,12 +157,18 @@ const PBANDS = [
   { a:'2021-01-01', b:'2022-01-01', name:'ช่วง 2 · ราคาที่ต้องจ่าย', tint:'rgba(96,136,216,.06)', ink:'rgba(140,168,228,.85)' },
   { a:'2022-01-01', b:'2023-01-01', name:'ช่วง 3 · แผ่วแต่ไม่ดับ', tint:'rgba(168,120,220,.055)', ink:'rgba(185,155,230,.85)' },
   { a:'2023-01-01', b:'2024-01-01', name:'ช่วง 4 · ความหวังในคูหา → ถูกหัก', tint:'rgba(88,190,120,.05)', ink:'rgba(130,205,155,.85)' },
+  { a:'2024-01-01', b:'2025-06-01', name:'ช่วง 5 · ความสูญเสียและความเงียบ', tint:'rgba(165,165,175,.05)', ink:'rgba(185,185,198,.85)' },
+  { a:'2025-06-01', b:'2026-03-01', name:'ช่วง 6 · ส่งไม้ต่อ', tint:'rgba(232,179,76,.06)', ink:'rgba(238,196,110,.9)' },
 ];
 // ═══ สเกล curated 3 ท่อน — single experience ไม่มีปุ่มซูม (แก้ px/วัน ตรงนี้ / เพิ่มท่อนได้เรื่อยๆ) ═══
 const SEGS = [
   { from: '2020-06-26', px: 12 },  // การระเบิด — งานถี่ ต้องการอากาศ
   { from: '2021-07-01', px: 8 },   // ดินแดง → ทะลุวัง
-  { from: '2022-04-01', px: 5 },   // งานห่าง — เดินเรื่องเร็วขึ้นจนจบ
+  { from: '2022-04-01', px: 5 },   // งานห่าง — เดินเรื่องเร็วขึ้น
+  { from: '2023-01-01', px: 3 },   // พับเวลา: ครึ่งแรกปี 66 (FA ว่างจนถึง ก.ค.)
+  { from: '2023-07-01', px: 5 },   // #พร้อม → นิรโทษกรรม
+  { from: '2024-04-01', px: 3 },   // พับเวลา: ความเงียบยาว
+  { from: '2025-06-01', px: 5 },   // ส่งไม้ต่อ — กลับจังหวะปกติ
 ];
 SEGS.forEach(s => s.t = new Date(s.from).getTime());
 const world = document.getElementById('world');
@@ -265,6 +277,12 @@ function faLane() {
     'ม็อบ18กรกฎา — เผาหุ่นประยุทธ์': 'กลาง',
     'ราษฎรยืนยันดันเพดาน': 'กลาง',
     'Respect My Vote — เคารพผลเลือกตั้ง': 'เล็ก',
+    'นิรโทษกรรมประชาชน – แคมเปญล่ารายชื่อ': 'กลาง',
+    '24 มิถุนา วันประชาชน by Tune & Co.': 'กลาง',
+    '10 สิงหา ความฝันประชาชน by Tune & Co.': 'กลาง',
+    'Run2Free — วิ่งเพื่อเสรีภาพ by Tune & Co.': 'กลาง',
+    'ตุลาที่คิดถึง — Dear October by Tune & Co.': 'กลาง',
+    'รณรงค์ประชามติ 8 กุมภา by Tune & Co': 'กลาง',
     'สหภาพคนทำงาน': 'กลาง',
     'โหวตอภิปรายไม่ไว้วางใจรัฐบาลประยุทธ์ โดยประชาชนจ้าาาา': 'กลาง',
     'แคมป์ฟังสภา จับตาอภิปรายไม่ไว้วางใจประยุทธ์': 'กลาง',
@@ -435,6 +453,10 @@ function faLane() {
     cap.style.width = Math.max(wOf(it, SIZE[it._size]), it._size === 'tiny' ? 66 : 84) + 'px';
     if (it._size === 'tiny') cap.style.fontSize = '9.5px';
     if (it._size === 'ph') { cap.style.cssText = 'width:60px; font-size:8.5px; -webkit-line-clamp:1; margin-top:3px;'; }
+    if (it.n.includes('Tune & Co')) {  // งานตระกูล Tune & Co — ชื่อเต็มสำคัญ ให้ 3 บรรทัดไม่ตัด
+      cap.style.webkitLineClamp = '3';
+      cap.style.width = Math.max(wOf(it, SIZE[it._size]), 120) + 'px';
+    }
     box.appendChild(cap);
     card.appendChild(tick); card.appendChild(dotb); card.appendChild(box);
     hover(card, it); world.appendChild(card);
