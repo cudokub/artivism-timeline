@@ -114,7 +114,7 @@ h1 { font-size:clamp(16px,1.9vw,22px); font-weight:600; }
 </style></head><body>
 <header>
   <h1>Timeline Mockup v3 — 3 เส้นเรื่อง</h1>
-  <span class="sub">การเมือง 15% · FREE ARTS 75% (บน: hero+กลาง · ล่าง: เล็ก 2 แถว) · วัฒนธรรม 10%</span>
+  <span class="sub">การเมือง 15% · FREE ARTS 75% · วัฒนธรรม 10%</span>
   <div class="legend">
     <span><span class="k" style="background:var(--pol)"></span>การเมือง</span>
     <span><span class="k" style="background:var(--fa)"></span>Free Arts</span>
@@ -132,10 +132,10 @@ const DATA = __DATA__;
 const T0 = new Date('2020-06-26').getTime(), T1 = new Date('2021-01-06').getTime();
 const DAY = 86400000;
 // lanes: pol 25% / fa 60% / cul 15% of 760 usable (top 40 for month labels)
-const POL = { top:40,  h:122 };            // 15% — เกาะเส้นแบ่งบน ชี้ขึ้น
-const FA  = { top:162, h:607 };            // 75% — เส้นแดง = เส้น Hero
-const CUL = { top:769, h:81 };             // 10% — เกาะเส้นแบ่งล่าง ชี้ลง
-const HERO_LINE = FA.top + 304;            // hero 50% : งานอื่น 50%
+const POL = { top:40,  h:122 };            // 15%
+const FA  = { top:162, h:607 };            // 75% — สเกลการ์ดคงเดิม (ล็อกแล้ว)
+const CUL = { top:769, h:81 };             // 10%
+const HERO_LINE = FA.top + 296;            // กึ่งกลาง: อากาศบน-ล่าง ~52px เท่ากัน
 const GAP = 12;                            // ช่องว่างมาตรฐานทุกจุด
 const MONTHS = [['2020-07-01','ก.ค. 63'],['2020-08-01','ส.ค.'],['2020-09-01','ก.ย.'],['2020-10-01','ต.ค.'],['2020-11-01','พ.ย.'],['2020-12-01','ธ.ค.'],['2021-01-01','']];
 let pxday = 12;
@@ -194,7 +194,7 @@ function faLane() {
   // Hero = เหนือเส้นแถวเดียว / งานอื่น = ใต้เส้น 3 แถว
   // ═══ ภาษากลางของทีม: ขนาด = ใหญ่(hero)/กลาง/เล็ก/จิ๋ว · แถว = บน(A1)/ล่างหนึ่ง(B1)/ล่างสอง(B2) ═══
   const ROW_OVERRIDE = { 'Graffiti #FREEART': 'B1', 'ป้ายแจก ม็อบสถานทูตเยอรมัน': 'A1' };            // บังคับแถวรายการ์ด: 'ชื่อการ์ด': 'A1'|'B1'|'B2'
-  const TEXT_ONLY = ['ม็อบ 22 พฤศจิกา ถนนอักษะ'];               // เลนข้อความล่างสุด — ไม่มีรูป กินที่น้อย
+  const TEXT_ONLY = [];                                          // เลนข้อความล่างสุด — ไม่มีรูป กินที่น้อย (ตอนนี้ว่าง)
   const SIZE_OVERRIDE = {                                         // ขนาดที่เอเลียร์เคาะ 4 ก.ค. 69
     'Graffiti #FREEART': 'จิ๋ว',
     'โยนไฟล์หมุดคณะราษฎรออนไลน์': 'จิ๋ว',
@@ -206,14 +206,13 @@ function faLane() {
     'ภาพ Set ปล่อยเพื่อนเรา': 'กลาง',
     'ผ้ายันต์ราษฎร': 'จิ๋ว',
     'บ๊ายบายไดโนเสาร์ x นักเรียนเลว': 'เล็ก',
-    'ม็อบ 22 พฤศจิกา ถนนอักษะ': 'จิ๋ว',
     'วาดพื้น แก้ได้ถ้าแก้รัฐธรรมนูญ': 'เล็ก',
     'วาดพื้น รัฐประหารมึงเจอกู': 'กลาง',
     '#Saveจะนะ x Alex Face': 'กลาง',
   };
   const TH_SIZE = { 'ใหญ่': 'hero', 'กลาง': 'medium', 'เล็ก': 'small', 'จิ๋ว': 'tiny' };
-  const SIZE = { hero: 185, medium: 130, small: 90, tiny: 70 };  // มาตรฐาน 4 ก.ค. 69 (50:50 + เลนข้อความ)
-  const PAD = { hero: 24, medium: 24, small: 24, tiny: 14 };
+  const SIZE = { hero: 200, medium: 140, small: 96, tiny: 74 };  // สเกลตามพื้นที่ 73% (4 ก.ค. 69)
+  const PAD = { hero: 24, medium: 24, small: 24, tiny: 10 };
   const wOf = (it, h) => Math.max(Math.min(Math.round(h * (it.ar || 1.6)), Math.round(h * 1.9)), 60);
 
   // ความหนาแน่น: ใครมีเพื่อนบ้านใกล้กว่า 100px → โซนแน่น → ย่อลงหนึ่งขั้น
@@ -258,7 +257,7 @@ function faLane() {
     }
     if (!below) { it._tk = 'A1'; it._size = size; tracks.A1 = Math.max(tracks.A1, px + spanOf(it, size)); return; }
     // skyline ล่างเส้น: ชิดเส้นที่สุด ชนแล้วหลบลง — ลึกเกินเพดาน (ก่อนเลนข้อความ) ให้ย่อไซส์แล้วลองใหม่
-    const LIMIT = 256;
+    const LIMIT = 300;
     const LADDER = ['medium', 'small', 'tiny'];
     const place = s => {
       const w = spanOf(it, s), h = boxH(s);

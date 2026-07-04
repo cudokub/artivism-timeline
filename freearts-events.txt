@@ -11,7 +11,6 @@
 2020-11-14 | yantra-campaign | ผ้ายันต์ราษฎร | cat:campaign | tier:featured | posts:7
 2020-11-18 | 18-nov-ratchaprasong | วาดพื้น แก้ได้ถ้าแก้รัฐธรรมนูญ | cat:produced | tier:featured | posts:6
 2020-11-21 | bye-bye-dinosaur | บ๊ายบายไดโนเสาร์ x นักเรียนเลว | cat:curated | tier:listed | posts:0
-2020-11-22 | aksa-road-rally | ม็อบ 22 พฤศจิกา ถนนอักษะ | cat:curated | tier:listed | posts:0
 2020-12-02 | 2-dec-ladprao | วาดพื้น รัฐประหารมึงเจอกู | cat:produced | tier:listed | posts:3
 2020-12-14 | chana-solidarity | #Saveจะนะ x Alex Face | cat:collaboration | tier:featured | posts:4
 2021-02-19 | mob-fest-parliament-feb-2021 | สกรีนเสื้อ #NO112 | cat:produced | tier:listed | posts:3
