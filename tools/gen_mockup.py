@@ -4,7 +4,7 @@ import json, html, os
 
 research = json.load(open('/Users/cudo/Desktop/Artivism/research-data.json'))
 politics = (research['result']['results'][0]['key_events'] + research['result']['results'][1]['key_events']
-            + research['result']['results'][2]['key_events'])
+            + research['result']['results'][2]['key_events'] + research['result']['results'][3]['key_events'])
 
 culture_raw = json.load(open('/Users/cudo/Desktop/Artivism/culture-curated.json'))['items']
 CULT_DATES = {
@@ -15,7 +15,7 @@ CULT_DATES = {
 }
 culture = []
 for it in culture_raw:
-    if it['period_tag'] not in ('1-2563', '2-2564', '3-2565'): continue
+    if it['period_tag'] not in ('1-2563', '2-2564', '3-2565', '4-2566'): continue
     d = it.get('date_exact') if it.get('date_exact') and it.get('date_exact') != 'unknown' else None
     if not d:
         for kw, dd in CULT_DATES.items():
@@ -32,7 +32,7 @@ def img_ar(path):
 fa = []
 for line in open('/Users/cudo/Desktop/Artivism/freearts-events.txt'):
     p = [x.strip() for x in line.split('|')]
-    if '2020-07-01' <= p[0] <= '2022-12-31':
+    if '2020-07-01' <= p[0] <= '2023-12-31':
         eid = p[1]
         fp = f'{IMG_DIR}/{eid}.jpg'
         img = f'tl-img/{eid}.jpg' if os.path.exists(fp) else None
@@ -124,15 +124,12 @@ h1 { font-size:clamp(16px,1.9vw,22px); font-weight:600; }
     <span><span class="k" style="background:var(--cul)"></span>วัฒนธรรม</span>
   </div>
 </header>
-<div class="zoom">ซูม:
-  <button data-z="8">แน่น</button><button data-z="12" class="on">กลาง</button><button data-z="18">ขยาย</button>
-  <span style="align-self:center; margin-left:8px">ลากเพื่อเลื่อน · ชี้เพื่อดูรายละเอียด</span>
-</div>
+<div class="zoom"><span style="align-self:center">ลากเพื่อเลื่อน · ชี้เพื่อดูรายละเอียด</span></div>
 <div id="viewport"><div id="world"><div id="guide"></div></div></div>
 <div id="tip"></div>
 <script>
 const DATA = __DATA__;
-const T0 = new Date('2020-06-26').getTime(), T1 = new Date('2023-01-06').getTime();
+const T0 = new Date('2020-06-26').getTime(), T1 = new Date('2024-01-06').getTime();
 const DAY = 86400000;
 // lanes: pol 25% / fa 60% / cul 15% of 760 usable (top 40 for month labels)
 const POL = { top:40,  h:122 };            // 15%
@@ -144,20 +141,37 @@ const MONTHS = [['2020-07-01','ก.ค. 63'],['2020-08-01','ส.ค.'],['2020-09
   ['2021-01-01','ม.ค. 64'],['2021-02-01','ก.พ.'],['2021-03-01','มี.ค.'],['2021-04-01','เม.ย.'],['2021-05-01','พ.ค.'],['2021-06-01','มิ.ย.'],
   ['2021-07-01','ก.ค.'],['2021-08-01','ส.ค.'],['2021-09-01','ก.ย.'],['2021-10-01','ต.ค.'],['2021-11-01','พ.ย.'],['2021-12-01','ธ.ค.'],
   ['2022-01-01','ม.ค. 65'],['2022-02-01','ก.พ.'],['2022-03-01','มี.ค.'],['2022-04-01','เม.ย.'],['2022-05-01','พ.ค.'],['2022-06-01','มิ.ย.'],
-  ['2022-07-01','ก.ค.'],['2022-08-01','ส.ค.'],['2022-09-01','ก.ย.'],['2022-10-01','ต.ค.'],['2022-11-01','พ.ย.'],['2022-12-01','ธ.ค.'],['2023-01-01','']];
+  ['2022-07-01','ก.ค.'],['2022-08-01','ส.ค.'],['2022-09-01','ก.ย.'],['2022-10-01','ต.ค.'],['2022-11-01','พ.ย.'],['2022-12-01','ธ.ค.'],
+  ['2023-01-01','ม.ค. 66'],['2023-02-01','ก.พ.'],['2023-03-01','มี.ค.'],['2023-04-01','เม.ย.'],['2023-05-01','พ.ค.'],['2023-06-01','มิ.ย.'],
+  ['2023-07-01','ก.ค.'],['2023-08-01','ส.ค.'],['2023-09-01','ก.ย.'],['2023-10-01','ต.ค.'],['2023-11-01','พ.ย.'],['2023-12-01','ธ.ค.'],['2024-01-01','']];
 
 // ═══ ช่วงของเรื่อง — bg สีจางแบ่งยุค ═══
 const PBANDS = [
   { a:'2020-07-01', b:'2021-01-01', name:'ช่วง 1 · การระเบิด', tint:'rgba(232,69,44,.055)', ink:'rgba(235,120,98,.85)' },
   { a:'2021-01-01', b:'2022-01-01', name:'ช่วง 2 · ราคาที่ต้องจ่าย', tint:'rgba(96,136,216,.06)', ink:'rgba(140,168,228,.85)' },
   { a:'2022-01-01', b:'2023-01-01', name:'ช่วง 3 · แผ่วแต่ไม่ดับ', tint:'rgba(168,120,220,.055)', ink:'rgba(185,155,230,.85)' },
+  { a:'2023-01-01', b:'2024-01-01', name:'ช่วง 4 · ความหวังในคูหา → ถูกหัก', tint:'rgba(88,190,120,.05)', ink:'rgba(130,205,155,.85)' },
 ];
-let pxday = 12;
+// ═══ สเกล curated 3 ท่อน — single experience ไม่มีปุ่มซูม (แก้ px/วัน ตรงนี้ / เพิ่มท่อนได้เรื่อยๆ) ═══
+const SEGS = [
+  { from: '2020-06-26', px: 12 },  // การระเบิด — งานถี่ ต้องการอากาศ
+  { from: '2021-07-01', px: 8 },   // ดินแดง → ทะลุวัง
+  { from: '2022-04-01', px: 5 },   // งานห่าง — เดินเรื่องเร็วขึ้นจนจบ
+];
+SEGS.forEach(s => s.t = new Date(s.from).getTime());
 const world = document.getElementById('world');
 const vp = document.getElementById('viewport');
 const tip = document.getElementById('tip');
 const guide = document.getElementById('guide');
-function x(d) { return (new Date(d).getTime() - T0) / DAY * pxday + 40; }
+function x(d) {
+  const t = new Date(d).getTime();
+  let px = 40;
+  for (let i = 0; i < SEGS.length; i++) {
+    const a = SEGS[i].t, b = i + 1 < SEGS.length ? SEGS[i + 1].t : Infinity;
+    if (t > a) px += (Math.min(t, b) - a) / DAY * SEGS[i].px;
+  }
+  return px;
+}
 function thd(dstr) { const d = new Date(dstr);
   const m = ['ม.ค.','ก.พ.','มี.ค.','เม.ย.','พ.ค.','มิ.ย.','ก.ค.','ส.ค.','ก.ย.','ต.ค.','พ.ย.','ธ.ค.'];
   return d.getDate() + ' ' + m[d.getMonth()] + ' ' + (d.getFullYear() + 543 - 2500); }
@@ -229,7 +243,9 @@ function faLane() {
   const arr = [...DATA.fa].sort((a, b) => a.d.localeCompare(b.d));
   // Hero = เหนือเส้นแถวเดียว / งานอื่น = ใต้เส้น 3 แถว
   // ═══ ภาษากลางของทีม: ขนาด = ใหญ่(hero)/กลาง/เล็ก/จิ๋ว · แถว = บน(A1)/ล่างหนึ่ง(B1)/ล่างสอง(B2) ═══
-  const ROW_OVERRIDE = { 'Graffiti #FREEART': 'B1', 'ป้ายแจก ม็อบสถานทูตเยอรมัน': 'A1' };  // บังคับแถวรายการ์ด: 'ชื่อการ์ด': 'A1'|'B1'|'B2'
+  const ROW_OVERRIDE = { 'Graffiti #FREEART': 'B1', 'ป้ายแจก ม็อบสถานทูตเยอรมัน': 'A1',
+    '#พร้อม — ค': 'B1',
+    'Respect My Vote — เคารพผลเลือกตั้ง': 'A1' };  // บังคับแถวรายการ์ด: 'A1'|'B1'|'B2' — hero + B1 = hero ใต้เส้น (ครั้งแรก: #พร้อม — ค)
   const AR_OVERRIDE = { 'Graffiti #FREEART': 1.6 };              // สัดส่วนแสดงผลรายการ์ด — รูปจริง 1.79 crop ขอบข้างเล็กน้อยกันดันเพื่อนบ้าน ก.ย. 63
   const TEXT_ONLY = [];                                          // เลนข้อความล่างสุด — ไม่มีรูป กินที่น้อย (ตอนนี้ว่าง)
   const SIZE_OVERRIDE = {                                         // ขนาดที่เอเลียร์เคาะ 4 ก.ค. 69
@@ -248,6 +264,7 @@ function faLane() {
     'ทลายแม็พ 112': 'กลาง',
     'ม็อบ18กรกฎา — เผาหุ่นประยุทธ์': 'กลาง',
     'ราษฎรยืนยันดันเพดาน': 'กลาง',
+    'Respect My Vote — เคารพผลเลือกตั้ง': 'เล็ก',
     'สหภาพคนทำงาน': 'กลาง',
     'โหวตอภิปรายไม่ไว้วางใจรัฐบาลประยุทธ์ โดยประชาชนจ้าาาา': 'กลาง',
     'แคมป์ฟังสภา จับตาอภิปรายไม่ไว้วางใจประยุทธ์': 'กลาง',
@@ -276,8 +293,15 @@ function faLane() {
   const tracks = { A1: -1e9, A1snug: -1e9, B1: -1e9, B2: -1e9 };
   const heroSpans = [];
   const placedAbove = [];  // skyline เหนือเส้น — ให้ ph ที่ล้นด้านล่างลอยขึ้นชั้นสองได้
+  const placedBelow = [];  // skyline: กล่องที่วางแล้ว {x0,x1,y0,y1}
   arr.filter(it => it.hero).forEach(it => {
     const px = x(it.d), w = Math.max(wOf(it, SIZE.hero), 84) + PAD.hero;
+    if (ROW_OVERRIDE[it.n] === 'B1') {
+      // HERO ใต้เส้น — เกาะเส้นแบบเดียวกับ hero บน แต่ห้อยลงล่าง จองพื้นที่ใน skyline ล่าง
+      placedBelow.push({ x0: px, x1: px + w, xr: px + wOf(it, SIZE.hero), y0: GAP, y1: GAP + 244 });
+      it._tk = 'B'; it._size = 'hero'; it._y = GAP;
+      return;
+    }
     heroSpans.push([px - 24, px + w]);
     placedAbove.push({ x0: px - 24, x1: px + w, xr: px + w, y0: GAP, y1: GAP + 244 });
     it._tk = 'A1'; it._size = 'hero';
@@ -294,7 +318,6 @@ function faLane() {
     let r = 0; while (trows[r] !== undefined && trows[r] > px) r++;
     trows[r] = px + w; it._trow = r;
   });
-  const placedBelow = [];  // skyline: กล่องที่วางแล้ว {x0,x1,y0,y1}
   const boxH = s => SIZE[s] + (s === 'ph' ? 20 : 32);  // ph caption บรรทัดเดียว
   arr.filter(it => !it.hero && !isText(it)).forEach(it => {
     const px = x(it.d);
@@ -420,7 +443,7 @@ function faLane() {
 
 function render() {
   world.querySelectorAll('.mgrid,.mlabel,.ev,.card,.base,.lane-sep,.pband').forEach(e => e.remove());
-  world.style.width = ((T1 - T0) / DAY * pxday + 120) + 'px';
+  world.style.width = (x(new Date(T1)) + 80) + 'px';
   PBANDS.forEach(p => {
     const b = document.createElement('div'); b.className = 'pband';
     const x0 = x(p.a), x1 = x(p.b);
@@ -451,10 +474,6 @@ render();
   const place = () => { const r = vp.getBoundingClientRect(); t.style.top = (r.top + L.top + 4) + 'px'; };
   place(); addEventListener('resize', place); addEventListener('scroll', place);
 });
-document.querySelectorAll('.zoom button').forEach(b => b.addEventListener('click', () => {
-  document.querySelectorAll('.zoom button').forEach(x => x.classList.remove('on'));
-  b.classList.add('on'); pxday = +b.dataset.z; render();
-}));
 let drag = null;
 vp.addEventListener('mousedown', e => { drag = { x: e.clientX, s: vp.scrollLeft }; vp.classList.add('drag'); });
 addEventListener('mousemove', e => { if (drag) vp.scrollLeft = drag.s - (e.clientX - drag.x); });
