@@ -118,12 +118,6 @@ h1 { font-size:clamp(16px,1.9vw,22px); font-weight:600; }
 </style></head><body>
 <header>
   <h1>Timeline Mockup v3 — 3 เส้นเรื่อง</h1>
-  <span class="sub">การเมือง 15% · FREE ARTS 75% · วัฒนธรรม 10%</span>
-  <div class="legend">
-    <span><span class="k" style="background:var(--pol)"></span>การเมือง</span>
-    <span><span class="k" style="background:var(--fa)"></span>Free Arts</span>
-    <span><span class="k" style="background:var(--cul)"></span>วัฒนธรรม</span>
-  </div>
 </header>
 <div class="zoom"><span style="align-self:center">ลากเพื่อเลื่อน · ชี้เพื่อดูรายละเอียด</span></div>
 <div id="viewport"><div id="world"><div id="guide"></div></div></div>
@@ -159,8 +153,8 @@ const PBANDS = [
   { a:'2021-01-01', b:'2022-01-01', name:'ช่วง 2 · ราคาที่ต้องจ่าย', tint:'rgba(96,136,216,.06)', ink:'rgba(140,168,228,.85)' },
   { a:'2022-01-01', b:'2023-01-01', name:'ช่วง 3 · แผ่วแต่ไม่ดับ', tint:'rgba(168,120,220,.055)', ink:'rgba(185,155,230,.85)' },
   { a:'2023-01-01', b:'2024-01-01', name:'ช่วง 4 · ความหวังในคูหา → ถูกหัก', tint:'rgba(88,190,120,.05)', ink:'rgba(130,205,155,.85)' },
-  { a:'2024-01-01', b:'2025-06-01', name:'ช่วง 5 · ความสูญเสียและความเงียบ', tint:'rgba(165,165,175,.05)', ink:'rgba(185,185,198,.85)' },
-  { a:'2025-06-01', b:'2027-03-08', name:'ช่วง 6 · การเติบโต', tint:'rgba(232,179,76,.06)', ink:'rgba(238,196,110,.9)' },
+  { a:'2024-01-01', b:'2025-01-01', name:'ช่วง 5 · ความสูญเสียและความเงียบ', tint:'rgba(165,165,175,.05)', ink:'rgba(185,185,198,.85)' },
+  { a:'2025-01-01', b:'2027-03-08', name:'ช่วง 6 · การเติบโต', tint:'rgba(232,179,76,.06)', ink:'rgba(238,196,110,.9)' },
 ];
 // ═══ สเกล curated 3 ท่อน — single experience ไม่มีปุ่มซูม (แก้ px/วัน ตรงนี้ / เพิ่มท่อนได้เรื่อยๆ) ═══
 const SEGS = [
@@ -257,8 +251,9 @@ function faLane() {
   // ═══ ภาษากลางของทีม: ขนาด = ใหญ่(hero)/กลาง/เล็ก/จิ๋ว · แถว = บน(A1)/ล่างหนึ่ง(B1)/ล่างสอง(B2) ═══
   const ROW_OVERRIDE = { 'Graffiti #FREEART': 'B1', 'ป้ายแจก ม็อบสถานทูตเยอรมัน': 'A1',
     '#พร้อม — ค': 'B1',
-    'Respect My Vote — เคารพผลเลือกตั้ง': 'A1' };  // บังคับแถวรายการ์ด: 'A1'|'B1'|'B2' — hero + B1 = hero ใต้เส้น (ครั้งแรก: #พร้อม — ค)
-  const AR_OVERRIDE = { 'Graffiti #FREEART': 1.6 };              // สัดส่วนแสดงผลรายการ์ด — รูปจริง 1.79 crop ขอบข้างเล็กน้อยกันดันเพื่อนบ้าน ก.ย. 63
+    'Respect My Vote — เคารพผลเลือกตั้ง': 'A1',
+    'ตลาดนัดราษฎร': 'A1' };  // บังคับแถวรายการ์ด: 'A1'|'B1'|'B2' — hero + B1 = hero ใต้เส้น (ครั้งแรก: #พร้อม — ค)
+  const AR_OVERRIDE = { 'Graffiti #FREEART': 1.6, 'ตลาดนัดราษฎร': 1.0 };              // สัดส่วนแสดงผลรายการ์ด — รูปจริง 1.79 crop ขอบข้างเล็กน้อยกันดันเพื่อนบ้าน ก.ย. 63
   const TEXT_ONLY = [];                                          // เลนข้อความล่างสุด — ไม่มีรูป กินที่น้อย (ตอนนี้ว่าง)
   const SIZE_OVERRIDE = {                                         // ขนาดที่เอเลียร์เคาะ 4 ก.ค. 69
     'Graffiti #FREEART': 'จิ๋ว',
@@ -292,8 +287,13 @@ function faLane() {
     'สกรีนเสื้อ ม็อบ 20 กุมภา': 'จิ๋ว',
     'สกรีนเสื้อ x เดินทะลุฟ้า': 'จิ๋ว',
     'ตั๋วช้าง': 'จิ๋ว',
+    'ม็อบสกายวอล์ค – คืนสิทธิ์ประกันตัว': 'เล็ก',
+    'ยื่นหยุดขัง!': 'เล็ก',
+    'ห้องเรียนรัฐมนตรี x นักเรียนเลว': 'เล็ก',
     'สหภาพคนทำงาน': 'เล็ก',
+    'ราษฎรฟ้องกลับ': 'เล็ก',
     'สถาบันปรีดีฯ – คำถาม': 'เล็ก',
+    'ตลาดนัดราษฎร': 'เล็ก',
     '#NoNpoBill': 'เล็ก',
     'ไพร์ดพาเหรด – โมเมนต์ระหว่างขบวน': 'เล็ก',
     'โหวตอภิปรายไม่ไว้วางใจรัฐบาลประยุทธ์ โดยประชาชนจ้าาาา': 'กลาง',
@@ -484,9 +484,7 @@ function render() {
     b.style.left = x0 + 'px'; b.style.width = (x1 - x0) + 'px';
     b.style.background = 'linear-gradient(180deg, ' + p.tint + ', transparent 60%, ' + p.tint + ')';
     const bar = document.createElement('div'); bar.className = 'pbar'; bar.style.background = p.ink;
-    const nm = document.createElement('div'); nm.className = 'pname';
-    nm.textContent = p.name; nm.style.color = p.ink;
-    b.appendChild(bar); b.appendChild(nm); world.appendChild(b);
+    b.appendChild(bar); world.appendChild(b);  // ป้ายชื่อช่วง (.pname) ถอดออก 6 ก.ค. 69 — เหลือแถบสี+เส้นบนไว้แยกยุค
   });
   MONTHS.forEach(([d, l]) => {
     const g = document.createElement('div'); g.className = 'mgrid'; g.style.left = x(d) + 'px'; world.appendChild(g);
@@ -502,12 +500,7 @@ function render() {
 }
 render();
 
-[[POL, 'การเมือง', 'var(--pol)'], [FA, 'FREE ARTS', 'var(--fa)'], [CUL, 'วัฒนธรรม', 'var(--cul)']].forEach(([L, label, color]) => {
-  const t = document.createElement('div'); t.className = 'lanetag'; t.textContent = label; t.style.color = color;
-  document.body.appendChild(t);
-  const place = () => { const r = vp.getBoundingClientRect(); t.style.top = (r.top + L.top + 4) + 'px'; };
-  place(); addEventListener('resize', place); addEventListener('scroll', place);
-});
+// ป้ายเลน (lanetag) การเมือง/FREE ARTS/วัฒนธรรม ถอดออก 6 ก.ค. 69 — ไม่จำเป็นแล้ว
 let drag = null;
 vp.addEventListener('mousedown', e => { drag = { x: e.clientX, s: vp.scrollLeft }; vp.classList.add('drag'); });
 addEventListener('mousemove', e => { if (drag) vp.scrollLeft = drag.s - (e.clientX - drag.x); });
